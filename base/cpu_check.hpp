@@ -4,16 +4,11 @@
 
 namespace fm {
 
-
+//Ref:https://www.felixcloutier.com/x86/cpuid
 class CpuChecker{
     public:
     void check();
     void show();
-    private:
-    void m_cpuid(int[4],int);
-    void setHinter(const char* set,bool isSupported);
-    std::string cpuVendor;
-
     bool MMXSupport;
 
     bool SSESupport;
@@ -28,8 +23,14 @@ class CpuChecker{
     bool AVX2Support;
 
     bool AVX512Support;
-
     bool Error;
+    private:
+    void m_cpuid(int[4],int,int);
+    void setHinter(const char* set,bool isSupported);
+    std::string cpuVendor;
+
+    
+
 };
 
 }

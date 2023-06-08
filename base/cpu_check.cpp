@@ -5,8 +5,8 @@
 
 namespace fm {
 
-void CpuChecker::m_cpuid(int registers[4], int eax) {
-  __cpuid(registers, eax);
+void CpuChecker::m_cpuid(int registers[4], int eax,int ecx = 0) {
+  __cpuidex(registers, eax,ecx);
 }
 
 void CpuChecker::check() {
@@ -58,8 +58,10 @@ void CpuChecker::check() {
   if (bitInfo[28]) {
     AVXSupport = true;
   }
-  m_cpuid(rgstr, 0x00000007);
-  bitInfo = std::bitset<32>(rgstr[2]);
+  rgstr[2] = 0;
+//When eax = 0x07h, the output depend on ecx
+  m_cpuid(rgstr, 0x00000007,0x00000000);
+  bitInfo = std::bitset<32>(rgstr[1]);
   if (bitInfo[5]) {
     AVX2Support = true;
   }
