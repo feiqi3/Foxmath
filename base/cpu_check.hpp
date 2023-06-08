@@ -2,6 +2,9 @@
 #define  CPU_CHECK_HPP__
 #include <string>
 
+namespace fm {
+
+
 class CpuChecker{
     public:
     void check();
@@ -28,6 +31,8 @@ class CpuChecker{
 
     bool Error;
 };
+
+}
 
 #endif
 

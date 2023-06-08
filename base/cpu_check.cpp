@@ -3,6 +3,8 @@
 #include <bitset>
 #include <iostream>
 
+namespace fm {
+
 void CpuChecker::m_cpuid(int registers[4], int eax) {
   __cpuid(registers, eax);
 }
@@ -119,4 +121,5 @@ void CpuChecker::setHinter(const char* set,bool isSupported){
     if(isSupported){
         std::cout<<set<<" is Supported.\n";
     }
+}
 }

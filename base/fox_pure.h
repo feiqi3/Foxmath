@@ -1,11 +1,14 @@
-#include "FoxMath.h"
+#ifndef FOX_PURE_H_
+#define FOX_PURE_H_
 #include"basic_def.h"
-#include <algorithm>
 #include <cmath>
 #include <cstring>
-#include <vcruntime_string.h>
 
 #if defined (_FM_PURE_)
+
+namespace fm{
+
+namespace simd {
 
 _fm_vec4 FM_INLINE FM_CALL fmLoadVecP(const FMFLOAT* pd){
     _fm_vec4 ret;
@@ -13,7 +16,7 @@ _fm_vec4 FM_INLINE FM_CALL fmLoadVecP(const FMFLOAT* pd){
     return ret;
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmLoadVec(double a,double b,double c,double d){
+_fm_vec4 FM_INLINE FM_CALL fmLoadVec(FMFLOAT a,FMFLOAT b,FMFLOAT c,FMFLOAT d){
     _fm_vec4 ret;
     ret.v[0] = a;
     ret.v[1] = b;
@@ -22,8 +25,8 @@ _fm_vec4 FM_INLINE FM_CALL fmLoadVec(double a,double b,double c,double d){
     return ret;
 }
 
-void FM_INLINE FM_CALL fmStroeVec(FMFLOAT * pd,_fm_vec4 vec){
-    memcpy(pd, vec.v, 4 * sizeof(FMFLOAT));
+void FM_INLINE FM_CALL fmStroeVec(fmAlignFLoat4& f4,_fm_vec4 vec){
+    memcpy(f4._v, vec.v, 4 * sizeof(FMFLOAT));
 }
 
 FMFLOAT FM_INLINE FM_CALL fmGetElem(const _fm_vec4& vec,int pos){
@@ -161,4 +164,12 @@ FMFLOAT FM_INLINE FM_CALL fmVec2Cross(const _fm_vec4& veca, const _fm_vec4& vecb
     return ret;
 }
 
+FMFLOAT FM_INLINE FM_CALL fmVecSum(const _fm_vec4& vec){
+    return vec.v[0] + vec.v[1] + vec.v[2]+vec.v[3];
+}
+
+}
+}
 #endif //_FM_PURE_
+
+#endif //FOX_PURE_H_ 
