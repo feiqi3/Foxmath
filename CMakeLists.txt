@@ -71,5 +71,5 @@ endif(FM_PURE OR FM_FORCE_PURE)
 
 file(GLOB SRC_LIST   "base/*.h" "base/*.hpp" "base/*.cpp")
 add_library(FOXMATH ${SRC_LIST})
-
+enable_testing()
 add_subdirectory(test)
