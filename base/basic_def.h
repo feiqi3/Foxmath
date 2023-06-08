@@ -4,7 +4,9 @@
 #include <stdint.h>
 #define FM_DEBUG
 
-//**NOTE** There is only one calling convention under x86-64, a strange fastcall
+//**NOTE** 
+//There is only one calling convention under x86-64, a strange fastcall
+//https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170
 
 //Only works under x86
 #if defined(_MSC_VER)
@@ -14,7 +16,8 @@
 #endif
 
 #ifdef _FM_USE_VECTORCALL_
-    //only msvc
+//MSVC only, fast than fastcall/stdcall
+//https://learn.microsoft.com/en-us/cpp/cpp/vectorcall?view=msvc-170
     #define FM_CALL __vectorcall
 #elif defined(_FM_USE_FASTCALL_)
     #define FM_CALL __fastcall
