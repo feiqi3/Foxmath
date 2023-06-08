@@ -34,7 +34,8 @@ FMFLOAT FM_INLINE FM_CALL fmGetElem(const _fm_vec4& vec,int pos){
 }
 
 _fm_vec4 FM_INLINE FM_CALL fmSpreadVec(FMFLOAT t){
-    return _mm_broadcast_ss(&t);
+    //_mm_broadcast_ss(&t) -> is a avx intrinsic, much faster than below
+    return _mm_set1_ps(t);
 }
 
 _fm_vec4 FM_INLINE FM_CALL fmVecAdd(const _fm_vec4& veca,const _fm_vec4& vecb){
