@@ -76,7 +76,7 @@ _fm_vec4 FM_INLINE FM_CALL fmVecMinOfEachElem(const _fm_vec4& veca,const _fm_vec
 
 FMFLOAT FM_INLINE FM_CALL fmMaxElemOfVec(const _fm_vec4& vec){
         _fm_vec4 temp = vec;
-    temp = _mm_shuffle_epi32(temp,_MM_SHUFFLE(0,1,2,3));
+    temp = _mm_shuffle_ps(temp,temp,_MM_SHUFFLE(0,1,2,3));
     /*
     origin:   | 3 | 2 | 1 | 0 |
     premuted: | 0 | 1 | 2 | 3 |
@@ -86,7 +86,7 @@ FMFLOAT FM_INLINE FM_CALL fmMaxElemOfVec(const _fm_vec4& vec){
     temp:  | max(3,0) | max(2,1) | max(2,1) | max(3,0) |
     temp1: | max(2,1) | max(3,0) | max(3,0) | max(2,1) |
     */
-    _fm_vec4 temp1 = _mm_shuffle_epi32(temp,_MM_SHUFFLE(2,3,0,1));
+    _fm_vec4 temp1 = _mm_shuffle_ps(temp,temp,_MM_SHUFFLE(2,3,0,1));
     temp =fmVecMaxOfEachElem(temp1, temp);
     /*
     | max | max | max | max |
@@ -96,7 +96,7 @@ FMFLOAT FM_INLINE FM_CALL fmMaxElemOfVec(const _fm_vec4& vec){
 
 FMFLOAT FM_INLINE FM_CALL fmMinElemOfVec(const _fm_vec4& vec){
     _fm_vec4 temp = vec;
-    temp = _mm_shuffle_epi32(temp,_MM_SHUFFLE(0,1,2,3));
+    temp = _mm_shuffle_ps(temp,temp,_MM_SHUFFLE(0,1,2,3));
     /*
     origin:   | 3 | 2 | 1 | 0 |
     premuted: | 0 | 1 | 2 | 3 |
@@ -106,7 +106,7 @@ FMFLOAT FM_INLINE FM_CALL fmMinElemOfVec(const _fm_vec4& vec){
     temp:  | min(3,0) | min(2,1) | min(2,1) | min(3,0) |
     temp1: | min(2,1) | min(3,0) | min(3,0) | min(2,1) |
     */
-    _fm_vec4 temp1 = _mm_shuffle_epi32(temp,_MM_SHUFFLE(2,3,0,1));
+    _fm_vec4 temp1 = _mm_shuffle_ps(temp,temp,_MM_SHUFFLE(2,3,0,1));
     temp =fmVecMinOfEachElem(temp1, temp);
     /*
     | min | min | min | min |
@@ -121,13 +121,13 @@ FMFLOAT FM_INLINE FM_CALL fmVecDot(const _fm_vec4& veca,const _fm_vec4& vecb){
    // premuted: | 0 | 1 | 2 | 3 |
 
    _fm_vec4 temp = fmVecMul(veca, vecb);
-   _fm_vec4 temp1 = _mm_shuffle_epi32(temp,_MM_SHUFFLE(0, 1, 2, 3));
+   _fm_vec4 temp1 = _mm_shuffle_ps(temp,_MM_SHUFFLE(0, 1, 2, 3));
 
    // tmp:    | 3+0 | 2+1 | 1+2 | 0+3 |
    // temp1:  | 2+1 | 3+0 | 0+3 | 1+2 |
 
     temp = fmVecAdd(temp, temp1);
-    temp1 = _mm_shuffle_epi32(temp,_MM_SHUFFLE(2, 3, 0, 1));
+    temp1 = _mm_shuffle_ps(temp,_MM_SHUFFLE(2, 3, 0, 1));
     return temp1;
 */
 
@@ -137,12 +137,12 @@ FMFLOAT FM_INLINE FM_CALL fmVecDot(const _fm_vec4& veca,const _fm_vec4& vecb){
     //_mm256_hadd_pd(veca,vecb) => (a+b,c+d,e+f,g+h)
 
     _fm_vec4 temp = _mm_hadd_ps(ab,ab);
-    _fm_vec4 shuffle = _mm_shuffle_epi32(temp,_MM_SHUFFLE(0,1,2,3));
+    _fm_vec4 shuffle = _mm_shuffle_ps(temp,temp,_MM_SHUFFLE(0,1,2,3));
     return fmGetElem(fmVecAdd(shuffle, temp),0);
 }
 
 _fm_vec4 FM_INLINE FM_CALL fmVecSqrt(const _fm_vec4& vec){
-    return _mm_sqrt_pd(vec);
+    return _mm_sqrt_ps(vec);
 }
 
 //Two vec3 cross product
@@ -150,33 +150,33 @@ _fm_vec4 FM_INLINE FM_CALL fmVec3Cross(const _fm_vec4& veca,const _fm_vec4& vecb
 /*
 //Naive version
 //a.yzx * b.zxy - a.zxy * b.yzx
-    _fm_vec4 aYZX = _mm_shuffle_epi32(veca,_MM_SHUFFLE(2, 1, 3, 0));
-    _fm_vec4 aZXY = _mm_shuffle_epi32(veca,_MM_SHUFFLE(1, 3, 2, 0));
-    _fm_vec4 bZXY = _mm_shuffle_epi32(vecb,_MM_SHUFFLE(1, 3, 2, 0));
-    _fm_vec4 bYZX = _mm_shuffle_epi32(vecb,_MM_SHUFFLE(2, 1, 3, 0));
+    _fm_vec4 aYZX = _mm_shuffle_ps(veca,_MM_SHUFFLE(2, 1, 3, 0));
+    _fm_vec4 aZXY = _mm_shuffle_ps(veca,_MM_SHUFFLE(1, 3, 2, 0));
+    _fm_vec4 bZXY = _mm_shuffle_ps(vecb,_MM_SHUFFLE(1, 3, 2, 0));
+    _fm_vec4 bYZX = _mm_shuffle_ps(vecb,_MM_SHUFFLE(2, 1, 3, 0));
     return fmVecSub( fmVecMul(aYZX, bZXY) ,fmVecMul(aZXY, bYZX) );
 */
 //Faster version, one shuffle less
-    _fm_vec4 aYZX = _mm_shuffle_epi32(veca,_MM_SHUFFLE(2, 1, 3, 0));
-    _fm_vec4 bYZX = _mm_shuffle_epi32(veca,_MM_SHUFFLE(2, 1, 3, 0));
-    _fm_vec4 c = _mm_sub_pd(
-        _mm_mul_pd(veca, bYZX),
-        _mm_mul_pd(aYZX, vecb)
+    _fm_vec4 aYZX = _mm_shuffle_ps(veca,veca,_MM_SHUFFLE(2, 1, 3, 0));
+    _fm_vec4 bYZX = _mm_shuffle_ps(vecb,vecb,_MM_SHUFFLE(2, 1, 3, 0));
+    _fm_vec4 c = _mm_sub_ps(
+        _mm_mul_ps(veca, bYZX),
+        _mm_mul_ps(aYZX, vecb)
         );
-    return _mm_shuffle_epi32(c,_MM_SHUFFLE(2, 1, 3, 0)); 
+    return _mm_shuffle_ps(c,c,_MM_SHUFFLE(2, 1, 3, 0)); 
 }
 
 FMFLOAT FM_INLINE FM_CALL fmVec2Cross(const _fm_vec4& veca, const _fm_vec4& vecb){
-    _fm_vec4 bYX = _mm_shuffle_epi32(veca,_MM_SHUFFLE(2, 3, 1, 0));
-    _fm_vec4 temp = _mm_mul_pd(bYX, veca);
-    _fm_vec4 hSub = _mm_hsub_pd(temp, temp);
+    _fm_vec4 bYX = _mm_shuffle_ps(veca,veca,_MM_SHUFFLE(2, 3, 1, 0));
+    _fm_vec4 temp = _mm_mul_ps(bYX, veca);
+    _fm_vec4 hSub = _mm_hsub_ps(temp, temp);
     return fmGetElem(hSub, 0);
 } 
 
 FMFLOAT FM_INLINE FM_CALL fmVecSum(const _fm_vec4& vec){
-    _fm_vec4 temp = _mm_shuffle_epi32(vec,_MM_SHUFFLE(0,1,2,3));
+    _fm_vec4 temp = _mm_shuffle_ps(vec,vec,_MM_SHUFFLE(0,1,2,3));
     _fm_vec4 sum = fmVecAdd(temp, vec);
-    temp = _mm_hadd_epi32(sum,sum);
+    temp = _mm_hadd_ps(sum,sum);
     return fmGetElem(temp, 0);
 }
 
