@@ -1,6 +1,7 @@
 #ifndef FOX_SSE_H_
 #define FOX_SSE_H_
 #include "basic_def.h"
+#include <iostream>
 #if defined (_FM_SSE4_) && defined (_FM_USE_FLOAT)
 
 namespace fm{
@@ -157,8 +158,8 @@ _fm_vec4 FM_INLINE FM_CALL fmVec3Cross(const _fm_vec4& veca,const _fm_vec4& vecb
     return fmVecSub( fmVecMul(aYZX, bZXY) ,fmVecMul(aZXY, bYZX) );
 */
 //Faster version, one shuffle less
-    _fm_vec4 aYZX = _mm_shuffle_ps(veca,veca,_MM_SHUFFLE(2, 1, 3, 0));
-    _fm_vec4 bYZX = _mm_shuffle_ps(vecb,vecb,_MM_SHUFFLE(2, 1, 3, 0));
+    _fm_vec4 aYZX = (_fm_vec4)_mm_shuffle_epi32(veca,_MM_SHUFFLE(2, 1, 3, 0));
+    _fm_vec4 bYZX = (_fm_vec4)_mm_shuffle_epi32(vecb,_MM_SHUFFLE(2, 1, 3, 0));
     _fm_vec4 c = _mm_sub_ps(
         _mm_mul_ps(veca, bYZX),
         _mm_mul_ps(aYZX, vecb)
