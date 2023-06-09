@@ -17,31 +17,31 @@ public:
   FMFLOAT &FM_CALL operator[](size_t t) { return __data._v[t]; }
   const FMFLOAT &FM_CALL operator[](size_t t) const { return __data._v[t]; }
 
-  const vector4 FM_INLINE FM_CALL operator+(const vector4 &b) const noexcept;
+  const vector4  FM_CALL operator+(const vector4 &b) const noexcept;
 
-  const vector4 FM_INLINE FM_CALL operator-(const vector4 &b) const noexcept;
+  const vector4  FM_CALL operator-(const vector4 &b) const noexcept;
 
-  const vector4 FM_INLINE FM_CALL operator*(const vector4 &b) const noexcept;
+  const vector4  FM_CALL operator*(const vector4 &b) const noexcept;
 
-  const vector4 FM_INLINE FM_CALL operator/(const vector4 &b) const noexcept;
+  const vector4  FM_CALL operator/(const vector4 &b) const noexcept;
 
-  const FMFLOAT FM_INLINE FM_CALL dot(const vector4 &b) const noexcept;
+  const FMFLOAT  FM_CALL dot(const vector4 &b) const noexcept;
 
-  const vector4 FM_INLINE FM_CALL cross(const vector4 &b) const noexcept;
+  const vector4  FM_CALL cross(const vector4 &b) const noexcept;
 
-  FMFLOAT FM_INLINE FM_CALL maxElement() const noexcept;
+  FMFLOAT  FM_CALL maxElement() const noexcept;
 
-  FMFLOAT FM_INLINE FM_CALL minElement() const noexcept;
+  FMFLOAT  FM_CALL minElement() const noexcept;
 
-  FMFLOAT FM_INLINE FM_CALL length() const noexcept;
+  FMFLOAT  FM_CALL length() const noexcept;
 
-  vector4 FM_INLINE FM_CALL square() const noexcept;
+  vector4  FM_CALL square() const noexcept;
 
-  vector4 FM_INLINE FM_CALL sqrt() const noexcept;
+  vector4  FM_CALL sqrt() const noexcept;
 
-  friend const vector4 FM_INLINE FM_CALL operator*(const vector4 &a,
+  friend const vector4  FM_CALL operator*(const vector4 &a,
                                                    FMFLOAT b) noexcept;
-  friend const vector4 FM_INLINE FM_CALL operator/(const vector4 &a,
+  friend const vector4  FM_CALL operator/(const vector4 &a,
                                                    FMFLOAT b) noexcept;
 
   friend std::ostream &operator<<(std::ostream &out, const vector4 &s);
@@ -55,15 +55,15 @@ private:
   simd::fmAlignFLoat4 __data;
 };
 
-const vector4 FM_INLINE FM_CALL operator*(const vector4 &a, FMFLOAT b) noexcept;
+const vector4  FM_CALL operator*(const vector4 &a, FMFLOAT b) noexcept;
 
-const vector4 FM_INLINE FM_CALL operator*(FMFLOAT b, const vector4 &a) noexcept;
+const vector4  FM_CALL operator*(FMFLOAT b, const vector4 &a) noexcept;
 
-const vector4 FM_INLINE FM_CALL operator/(const vector4 &a, FMFLOAT b) noexcept;
+const vector4  FM_CALL operator/(const vector4 &a, FMFLOAT b) noexcept;
 
 std::ostream &operator<<(std::ostream &out, const vector4 &s);
 
-bool FM_INLINE FM_CALL hasNan(const vector4 &in) noexcept;
+bool  FM_CALL hasNan(const vector4 &in) noexcept;
 
 } // namespace fm
 
