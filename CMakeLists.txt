@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(FOXMATH CXX)
+project(FoxMath CXX)
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 if(NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU|MSVC")
@@ -69,7 +69,7 @@ endif(FM_PURE OR FM_FORCE_PURE)
 
 
 
-file(GLOB SRC_LIST   "base/*.h" "base/*.hpp" "base/*.cpp")
-add_library(FOXMATH ${SRC_LIST})
+file(GLOB SRC_LIST   "base/*.h" "base/*.hpp" "base/*.cpp" "vector/*.h" "vector/*.cpp")
+add_library(FoxMath ${SRC_LIST})
 enable_testing()
 add_subdirectory(test)
