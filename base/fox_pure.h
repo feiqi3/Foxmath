@@ -1,11 +1,11 @@
 #ifndef FOX_PURE_H_
 #define FOX_PURE_H_
 #include"basic_def.h"
-#include <cmath>
 #include <cstring>
-
+#include<algorithm>
 #if defined (_FM_PURE_)
 
+#include <cmath>
 namespace fm {
 
 	namespace simd {
@@ -55,7 +55,7 @@ namespace fm {
 		}
 
 		_fm_vec4 FM_INLINE FM_CALL fmVecScale(const _fm_vec4& veca, FMFLOAT factor) {
-			_fm_vec4 ret;
+			_fm_vec4 ret = veca;
 			ret.v[0] *= factor;
 			ret.v[1] *= factor;
 			ret.v[2] *= factor;
@@ -64,7 +64,7 @@ namespace fm {
 		}
 
 		_fm_vec4 FM_INLINE FM_CALL fmVecMul(const _fm_vec4& veca, const _fm_vec4& vecb) {
-			_fm_vec4 ret;
+			_fm_vec4 ret = veca;
 			ret.v[0] = veca.v[0] * vecb.v[0];
 			ret.v[1] = veca.v[1] * vecb.v[1];
 			ret.v[2] = veca.v[2] * vecb.v[2];
@@ -73,7 +73,7 @@ namespace fm {
 		}
 
 		_fm_vec4 FM_INLINE FM_CALL fmVecSub(const _fm_vec4& veca, const _fm_vec4& vecb) {
-			_fm_vec4 ret;
+			_fm_vec4 ret = veca;
 			ret.v[0] = veca.v[0] - vecb.v[0];
 			ret.v[1] = veca.v[1] - vecb.v[1];
 			ret.v[2] = veca.v[2] - vecb.v[2];
