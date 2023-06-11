@@ -4,6 +4,8 @@
 
 #if defined (_FM_AVX2_) && defined (_FM_USE_DOUBLE)
 
+
+
 namespace fm {
 
 	namespace simd {
@@ -20,6 +22,7 @@ namespace fm {
 		_fm_vec4 FM_INLINE FM_CALL fmLoadVec(FMFLOAT a, FMFLOAT b, FMFLOAT c, FMFLOAT d) {
 			//In memory, its layout is like :
 			// | a | b | c | d |
+			// | 0 | 1 | 2 | 3 | -> shuffle index
 			return _mm256_set_pd(d, c, b, a);
 		}
 
@@ -85,17 +88,17 @@ namespace fm {
 
 		FMFLOAT FM_INLINE FM_CALL fmMaxElemOfVec(const _fm_vec4& vec) {
 			_fm_vec4 temp = vec;
-			temp = _mm256_permute4x64_pd(temp, _MM_SHUFFLE(0, 1, 2, 3));
+			temp = _mm256_permute4x64_pd(temp, _FM_SHUFFLE(3, 2, 1, 0));
 			/*
-			origin:   | 3 | 2 | 1 | 0 |
-			premuted: | 0 | 1 | 2 | 3 |
+			origin:   | 0 | 1 | 2 | 3 |
+			premuted: | 3 | 2 | 1 | 0 |
 			*/
 			temp = fmVecMaxOfEachElem(temp, vec);
 			/*
 			temp:  | max(3,0) | max(2,1) | max(2,1) | max(3,0) |
 			temp1: | max(2,1) | max(3,0) | max(3,0) | max(2,1) |
 			*/
-			_fm_vec4 temp1 = _mm256_permute4x64_pd(temp, _MM_SHUFFLE(2, 3, 0, 1));
+			_fm_vec4 temp1 = _mm256_permute4x64_pd(temp, _FM_SHUFFLE(1, 0, 3, 2));
 			temp = fmVecMaxOfEachElem(temp1, temp);
 			/*
 			| max | max | max | max |
@@ -106,7 +109,7 @@ namespace fm {
 
 		FMFLOAT FM_INLINE FM_CALL fmMinElemOfVec(const _fm_vec4& vec) {
 			_fm_vec4 temp = vec;
-			temp = _mm256_permute4x64_pd(temp, _MM_SHUFFLE(0, 1, 2, 3));
+			temp = _mm256_permute4x64_pd(temp, _FM_SHUFFLE(3, 2, 1, 0));
 			/*
 			origin:   | 3 | 2 | 1 | 0 |
 			premuted: | 0 | 1 | 2 | 3 |
@@ -116,7 +119,7 @@ namespace fm {
 			temp:  | min(3,0) | min(2,1) | min(2,1) | min(3,0) |
 			temp1: | min(2,1) | min(3,0) | min(3,0) | min(2,1) |
 			*/
-			_fm_vec4 temp1 = _mm256_permute4x64_pd(temp, _MM_SHUFFLE(2, 3, 0, 1));
+			_fm_vec4 temp1 = _mm256_permute4x64_pd(temp, _FM_SHUFFLE(1, 0, 3, 2));
 			temp = fmVecMinOfEachElem(temp1, temp);
 			/*
 			| min | min | min | min |
@@ -125,29 +128,13 @@ namespace fm {
 		}
 
 		FMFLOAT FM_INLINE FM_CALL fmVecDot(const _fm_vec4& veca, const _fm_vec4& vecb) {
-
-			/*
-			   // origin:   | 3 | 2 | 1 | 0 |
-			   // premuted: | 0 | 1 | 2 | 3 |
-
-			   _fm_vec4 temp = fmVecMul(veca, vecb);
-			   _fm_vec4 temp1 = _mm256_permute4x64_pd(temp,_MM_SHUFFLE(0, 1, 2, 3));
-
-			   // tmp:    | 3+0 | 2+1 | 1+2 | 0+3 |
-			   // temp1:  | 2+1 | 3+0 | 0+3 | 1+2 |
-
-				temp = fmVecAdd(temp, temp1);
-				temp1 = _mm256_permute4x64_pd(temp,_MM_SHUFFLE(2, 3, 0, 1));
-				return temp1;
-			*/
-
 			_fm_vec4 ab = fmVecMul(veca, vecb);
 
 			//veca(a,b,c,d) vecb(e,f,g,h)
 			//_mm256_hadd_pd(veca,vecb) => (a+b,c+d,e+f,g+h)
 
 			_fm_vec4 temp = _mm256_hadd_pd(ab, ab);
-			_fm_vec4 shuffle = _mm256_permute4x64_pd(temp, _MM_SHUFFLE(0, 1, 2, 3));
+			_fm_vec4 shuffle = _mm256_permute4x64_pd(temp, _FM_SHUFFLE(3, 2, 1, 0));
 			return fmGetElem(fmVecAdd(shuffle, temp), 0);
 		}
 
@@ -158,33 +145,33 @@ namespace fm {
 		//Two vec3 cross product
 		_fm_vec4 FM_INLINE FM_CALL fmVec3Cross(const _fm_vec4& veca, const _fm_vec4& vecb) {
 			/*
-			//Naive version
-			//a.yzx * b.zxy - a.zxy * b.yzx
-				_fm_vec4 aYZX = _mm256_permute4x64_pd(veca,_MM_SHUFFLE(2, 1, 3, 0));
-				_fm_vec4 aZXY = _mm256_permute4x64_pd(veca,_MM_SHUFFLE(1, 3, 2, 0));
-				_fm_vec4 bZXY = _mm256_permute4x64_pd(vecb,_MM_SHUFFLE(1, 3, 2, 0));
-				_fm_vec4 bYZX = _mm256_permute4x64_pd(vecb,_MM_SHUFFLE(2, 1, 3, 0));
-				return fmVecSub( fmVecMul(aYZX, bZXY) ,fmVecMul(aZXY, bYZX) );
-			*/
-			//Faster version, one shuffle less
-			_fm_vec4 aYZX = _mm256_permute4x64_pd(veca, _MM_SHUFFLE(2, 1, 3, 0));
-			_fm_vec4 bYZX = _mm256_permute4x64_pd(veca, _MM_SHUFFLE(2, 1, 3, 0));
+				//Naive version
+				//a.yzx * b.zxy - a.zxy * b.yzx
+				_fm_vec4 aYZX = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(1, 2, 0, 3));
+				_fm_vec4 aZXY = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(2, 0, 1, 3));
+				_fm_vec4 bZXY = _mm256_permute4x64_pd(vecb, _FM_SHUFFLE(2, 0, 1, 3));
+				_fm_vec4 bYZX = _mm256_permute4x64_pd(vecb, _FM_SHUFFLE(1, 2, 0, 3));
+				return fmVecSub(fmVecMul(aYZX, bZXY), fmVecMul(aZXY, bYZX));
+				*/
+				//Faster version, one shuffle less
+			_fm_vec4 aYZX = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(1, 2, 0, 3));
+			_fm_vec4 bYZX = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(1, 2, 0, 3));
 			_fm_vec4 c = _mm256_sub_pd(
 				_mm256_mul_pd(veca, bYZX),
 				_mm256_mul_pd(aYZX, vecb)
 			);
-			return _mm256_permute4x64_pd(c, _MM_SHUFFLE(2, 1, 3, 0));
+			return _mm256_permute4x64_pd(c, _FM_SHUFFLE(1, 2, 0, 3));
 		}
 
 		FMFLOAT FM_INLINE FM_CALL fmVec2Cross(const _fm_vec4& veca, const _fm_vec4& vecb) {
-			_fm_vec4 bYX = _mm256_permute4x64_pd(veca, _MM_SHUFFLE(2, 3, 1, 0));
+			_fm_vec4 bYX = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(1, 0, 2, 3));
 			_fm_vec4 temp = _mm256_mul_pd(bYX, veca);
 			_fm_vec4 hSub = _mm256_hsub_pd(temp, temp);
 			return fmGetElem(hSub, 0);
 		}
 
 		FMFLOAT FM_INLINE FM_CALL fmVecSum(const _fm_vec4& vec) {
-			_fm_vec4 temp = _mm256_permute4x64_pd(vec, _MM_SHUFFLE(0, 1, 2, 3));
+			_fm_vec4 temp = _mm256_permute4x64_pd(vec, _FM_SHUFFLE(3, 2, 1, 0));
 			_fm_vec4 sum = fmVecAdd(temp, vec);
 			temp = _mm256_hadd_pd(sum, sum);
 			return fmGetElem(temp, 0);

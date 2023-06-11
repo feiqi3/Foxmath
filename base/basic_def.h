@@ -37,7 +37,15 @@
 #include "immintrin.h"
 #endif
 
+#if defined (__AVX__)
+#define _FM_AVX_
+#define _FM_SSE3_
+#define _FM_SSE4_
+#include "immintrin.h"
+#endif
+
 #if defined (__AVX2__)
+#define _FM_AVX_
 #define _FM_AVX2_
 #define _FM_SSE3_
 #define _FM_SSE4_
@@ -99,5 +107,38 @@ namespace fm {
 		};
 	}
 }
+
+// | a | b | c | d | -> vec layout in memory
+// | 0 | 1 | 2 | 3 | -> shuffle index
+#define _FM_SHUFFLE(a,b,c,d) _MM_SHUFFLE(d,c,b,a)
+//For Shuffle operation 
+/*--------------------------------------------*/
+//The Shuffle Index is like below in _MM_SHUFFLE
+// | a | b | c | d |  -> _m256/_m128's layout in memory, load by _mm256_set_pd(d, c, b, a)
+// | 0 | 1 | 2 | 3 |  -> shuffle index
+// After using shuffle by _MM_SHUFFLE(0,1,2,3)
+// We will get (d,c,b,a)
+// See, it inverse the vector after shuffle it
+
+//Another example 
+//For a _m256 has a mem layout like below 
+// | 0 | 1 | 2 | 3 |
+// Then use the shuffle sequence (0,1,2,3)
+//will get the outcome 
+// | 3 | 2 | 1 | 0 |
+
+//The final example 
+// Vector : 
+// | 0 | 1 | 2 | 3 |
+// Shuffle sequence
+// | 3 | 0 | 2 | 1 |
+// Will get :
+// | 1 | 2 | 0 | 3 |
+//Anyway I think _MM_SHUFFLE and shuffle operation ar SUPER S/T/U/P/I/D function
+//It makes no sense.
+//This has confused me for hours.
+//So I leave a Macro and a long comment here
+//To make EVERY THING CLEAR
+
 
 #endif //BASIC_DEF_H
