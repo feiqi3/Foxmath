@@ -140,11 +140,11 @@ namespace fm {
 //For Shuffle operation 
 /*--------------------------------------------*/
 //The Shuffle Index is like below in _MM_SHUFFLE
-// | a | b | c | d |  -> _m256/_m128's layout in memory, load by _mm256_set_pd(d, c, b, a)
+// | a | b | c | d |  -> _m256/_m128's layout in memory, load by _mm256_set_pd(d, c, b, a)/_mm_set_ps(d, c, b, a)
 // | 0 | 1 | 2 | 3 |  -> shuffle index
 // After using shuffle by _MM_SHUFFLE(0,1,2,3)
 // We will get (d,c,b,a)
-// See, it inverse the vector after shuffle it
+// See, it inverse the vector after shuffling it
 
 //Another example 
 //For a _m256 has a mem layout like below 

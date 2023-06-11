@@ -67,7 +67,7 @@ else()
             message("Compile flags add \'/arch:AVX2\'")
         endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
     else()
-    #If double but no avx support then use pure mode
+    #If use double but no avx support then use pure mode
         set(FM_PURE on)
     endif(FM_AVX_SUPPORT AND NOT FM_FORCE_PURE)
 endif(FM_USE_FLOAT)
