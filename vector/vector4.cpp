@@ -5,6 +5,8 @@ namespace fm {
 		std::memcpy(this->__data._v, vec, 4 * sizeof(FMFLOAT));
 	}
 
+	vector4::vector4(){}
+
 	vector4::vector4(FMFLOAT a) {
 		__data[0] = a;
 		__data[1] = a;
