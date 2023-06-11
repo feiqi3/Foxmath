@@ -12,15 +12,24 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
     message("Compile flags add \'-std=c++17\'")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC" )
-    set(CMAKE_CXX_FLAGS "/std:c++17 ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "/std:c++17 /Zc:__cplusplus ${CMAKE_CXX_FLAGS}")
     message("Compile flags add \'/std:c++17\'")
-endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
+    #https://learn.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-170
+    message("Compile flags add \'/Zc:__cplusplus\'")
+    endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 
 option(FM_SSE_SUPPORT "Enable sse support for programe." OFF)
 option(FM_AVX_SUPPORT "Enable avx support for programe." OFF)
 option(FM_FORCE_PURE "Enable avx support for programe." OFF)
 option(FM_USE_FLOAT "Use float as vector element." OFF)
 option(FM_USE_DOUBLE "Use double as vector elements." OFF)
+option(FM_DEBUG "Use double as vector elements." OFF)
+
+#Open this will add some check for FoxMath
+if (FM_DEBUG)
+message("FoxMath debug mode now.")
+add_definitions(-DFM_DEBUG)
+endif(FM_DEBUG)
 
 #FoxMath use float as its vector element
 if (FM_USE_FLOAT)

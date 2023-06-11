@@ -52,9 +52,41 @@
 #include "immintrin.h"
 #endif
 
+//MSVC does not support #warning #error
+#if defined(_MSC_VER)
+#define __AUX_STR_EXP(_exp_)                    #_exp_
+/** Transform \a _exp_ to string format. */
+#define ___AUX_STR(_exp_)                       __AUX_STR_EXP(_exp_)
+/** location file name and file line */
+#define __LOCATION_STR                          __FILE__ "("  ___AUX_STR(__LINE__) ")"
+/** define warning message throw */
+#define throw_warning(_code_, _message_)        message(__LOCATION_STR ": warning C" ___AUX_STR(_code_) ": " _message_)
+#define throw_error(_level_, _code_, _message_) message(__LOCATION_STR ":" _level_ " error C" ___AUX_STR(_code_) ": " _message_)
+#endif
+
+
 #define FM_ALIGNED(x) struct alignas(x)
 
 #define FM_INLINE inline
+
+#if defined(_M_ARM) || defined(_M_ARM64)
+#if !defined(_MSC_VER)
+#error Arm is not supported now
+#else 
+#pragma throw_error(10000,"FoxMath does not support arm.")
+#endif
+#endif
+
+
+
+#if (defined (_FM_PURE_))
+#if !defined(_MSC_VER) 
+#warning "SIMD Optimization is closed."
+#else
+#pragma throw_warning(10001,"SIMD Optimization is closed.")
+
+#endif
+#endif
 
 namespace fm {
 
@@ -65,30 +97,24 @@ namespace fm {
 #define _FM_USE_FLOAT
 #endif
 
-#if defined(_M_ARM) || defined(_M_ARM64)
-#error Arm is not supported now
-#endif
 
-#if (defined (_FM_PURE_))
-		#warning SIMD Optimization is closed.
-#define FM_ALIGN_REQ 8
-#endif
 
 #if defined (_FM_USE_DOUBLE)
-#define FM_ALIGN_REQ 32
 #define FMFLOAT double
 #if defined (_FM_AVX2_)
-			using _fm_vec4 = __m256d;
+#define FM_ALIGN_REQ 32
+		using _fm_vec4 = __m256d;
 #endif
 #elif defined (_FM_USE_FLOAT)
-#define FM_ALIGN_REQ 16
 #define FMFLOAT float
 #if defined (_FM_SSE4_)
-			using _fm_vec4 = __m128;
+#define FM_ALIGN_REQ 16
+		using _fm_vec4 = __m128;
 #endif
 #endif
 
 #if defined (_FM_PURE_) || (!defined (_FM_SSE4_) && !defined (_FM_AVX2_) )
+#define FM_ALIGN_REQ 8
 		using _fm_vec4 = struct {
 			FMFLOAT v[4];
 		};
@@ -140,5 +166,15 @@ namespace fm {
 //So I leave a Macro and a long comment here
 //To make EVERY THING CLEAR
 
+#if __cplusplus >= 201703L
+#define FM_NEW new
+#else 
+#if !defined (_MSC_VER)
+#error  "Under std:c++17, operator new cannot assure the alignment of struct, which may cause crash when using simd instruction"
+#else
+#pragma throw_warning(10002,"Under c++17, operator new cannot assure the alignment of struct, which may cause crash when using simd instruction")
+#endif
+
+#endif
 
 #endif //BASIC_DEF_H
