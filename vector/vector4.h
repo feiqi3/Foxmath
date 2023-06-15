@@ -6,17 +6,19 @@
 #include "../base/fox_sse.h"
 #include <cmath>
 #include <cstring>
+#include <initializer_list>
 #include <ostream>
 
 namespace fm {
 	class vector4 {
 	public:
-		vector4();
+		vector4()noexcept;
+		vector4(const std::initializer_list<FMFLOAT>& list);
 		vector4(FMFLOAT* vec);
-		vector4(FMFLOAT a, FMFLOAT b, FMFLOAT c, FMFLOAT d);
-		vector4(FMFLOAT a);
-		FM_INLINE FMFLOAT& FM_CALL  operator[](size_t t) { return __data._v[t]; }
-		FM_INLINE const FMFLOAT& FM_CALL operator[](size_t t) const { return __data._v[t]; }
+		vector4(FMFLOAT a, FMFLOAT b, FMFLOAT c, FMFLOAT d) noexcept;
+		vector4(FMFLOAT a)noexcept;
+		FMFLOAT& FM_CALL  operator[](size_t t) noexcept;
+		const FMFLOAT& FM_CALL operator[](size_t t) const noexcept;
 
 		const vector4  FM_CALL operator+(const vector4& b) const noexcept;
 
@@ -52,9 +54,9 @@ namespace fm {
 		friend std::ostream& operator<<(std::ostream& out, const vector4& s);
 
 	protected:
-		vector4(const simd::fmAlignFLoat4& in) : __data(in) {}
+		vector4(const simd::fmAlignFLoat4& in);
 
-		vector4(const simd::_fm_vec4& in) { simd::fmStroeVec(this->__data, in); }
+		vector4(const simd::_fm_vec4& in);
 
 	private:
 		simd::fmAlignFLoat4 __data;

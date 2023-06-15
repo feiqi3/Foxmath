@@ -5,26 +5,46 @@ namespace fm {
 		std::memcpy(this->__data._v, vec, 4 * sizeof(FMFLOAT));
 	}
 
-	vector4::vector4(){}
+	vector4::vector4() noexcept :__data{ 0,0,0,0 } {}
 
-	vector4::vector4(FMFLOAT a) {
-		__data[0] = a;
-		__data[1] = a;
-		__data[2] = a;
-		__data[3] = a;
+	vector4::vector4(const std::initializer_list<FMFLOAT>& list)
+	{
+#if defined(FM_DEBUG)
+		assert(list.size() == 4);
+#endif//FM_DEBUG
+		auto lp = list.begin();
+		for (char i = 0; i < 4; ++i, ++lp) {
+			__data[i] = *lp;
+		}
 	}
 
-	vector4::vector4(FMFLOAT a, FMFLOAT b, FMFLOAT c, FMFLOAT d) {
-		this->__data[0] = a;
-		this->__data[1] = b;
-		this->__data[2] = c;
-		this->__data[3] = d;
+	vector4::vector4(FMFLOAT a) noexcept :__data{ a,a,a,a } {
+	}
+
+	FMFLOAT& FM_CALL vector4::operator[](size_t t) noexcept
+	{
+#ifdef FM_DEBUG
+		assert(t <= 3 && t >= 0);
+#endif // FM_DEBUG
+
+		return __data._v[t];
+	}
+
+	const FMFLOAT& FM_CALL vector4::operator[](size_t t) const noexcept
+	{
+#ifdef FM_DEBUG
+		assert(t <= 3 && t >= 0);
+#endif // FM_DEBUG
+		return __data._v[t];
+	}
+
+	vector4::vector4(FMFLOAT a, FMFLOAT b, FMFLOAT c, FMFLOAT d) noexcept :__data{ a,b,c,d }
+	{
 	}
 
 	const vector4 FM_CALL vector4::operator+(const vector4& b) const noexcept {
 		simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
 		simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
-
 		simd::_fm_vec4 ret = simd::fmVecAdd(veca, vecb);
 		return vector4(ret);
 	}
@@ -88,6 +108,13 @@ namespace fm {
 	vector4 FM_CALL vector4::sqrt() const noexcept {
 		simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data._v);
 		return simd::fmVecSqrt(vec);
+	}
+
+	vector4::vector4(const simd::fmAlignFLoat4& in) : __data(in) {}
+
+	vector4::vector4(const simd::_fm_vec4& in)
+	{
+		simd::fmStroeVec(this->__data, in);
 	}
 
 	std::ostream& operator<<(std::ostream& out, const vector4& s) {
