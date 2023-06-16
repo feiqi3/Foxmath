@@ -9,6 +9,8 @@
 #include <initializer_list>
 #include <ostream>
 
+// Forward declaration
+
 namespace fm {
 	class vector4 {
 	public:
@@ -17,7 +19,11 @@ namespace fm {
 		vector4(FMFLOAT* vec);
 		vector4(FMFLOAT a, FMFLOAT b, FMFLOAT c, FMFLOAT d) noexcept;
 		vector4(FMFLOAT a)noexcept;
+		vector4(const vector4& in);
 		FMFLOAT& FM_CALL  operator[](size_t t) noexcept;
+
+
+
 		const FMFLOAT& FM_CALL operator[](size_t t) const noexcept;
 
 		const vector4  FM_CALL operator+(const vector4& b) const noexcept;
@@ -53,12 +59,21 @@ namespace fm {
 
 		friend std::ostream& operator<<(std::ostream& out, const vector4& s);
 
+		friend class mat4;
+
+		friend const fm::vector4 FM_CALL operator*(const fm::vector4& veca,
+			const fm::mat4& matb) noexcept;
+
+
+		friend const fm::vector4 FM_CALL operator*(const fm::mat4& mata,
+			const fm::vector4& vecb) noexcept;
+
 	protected:
 		vector4(const simd::fmAlignFLoat4& in);
 
 		vector4(const simd::_fm_vec4& in);
 
-	private:
+	protected:
 		simd::fmAlignFLoat4 __data;
 	};
 

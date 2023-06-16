@@ -21,6 +21,11 @@ namespace fm {
 	vector4::vector4(FMFLOAT a) noexcept :__data{ a,a,a,a } {
 	}
 
+	vector4::vector4(const vector4& in)
+	{
+		memcpy(this->__data._v, in.__data._v, sizeof(__data));
+	}
+
 	FMFLOAT& FM_CALL vector4::operator[](size_t t) noexcept
 	{
 #ifdef FM_DEBUG

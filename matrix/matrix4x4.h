@@ -4,18 +4,20 @@
 #include <ostream>
 namespace fm {
 
-	// Forward declaration
 
 	class mat4 {
 	public:
-		mat4();
+		mat4() noexcept;
 		mat4(const std::initializer_list<FMFLOAT>& in);
 		mat4(FMFLOAT _m00, FMFLOAT _m01, FMFLOAT _m02, FMFLOAT _m03, FMFLOAT _m10,
 			FMFLOAT _m11, FMFLOAT _m12, FMFLOAT _m13, FMFLOAT _m20, FMFLOAT _m21,
 			FMFLOAT _m22, FMFLOAT _m23, FMFLOAT _m30, FMFLOAT _m31, FMFLOAT _m32,
-			FMFLOAT _m33);
+			FMFLOAT _m33) noexcept;
 		mat4(const vector4& vec0, const vector4& vec1, const vector4& vec2,
-			const vector4& vec3);
+			const vector4& vec3)noexcept;
+
+		mat4(const mat4& in);
+
 
 		vector4& FM_CALL operator[](size_t t) noexcept;
 
@@ -27,12 +29,20 @@ namespace fm {
 
 		const mat4 FM_CALL operator-(const mat4& b) const noexcept;
 
+		mat4 FM_CALL inverse() const noexcept;
+
+		mat4 FM_CALL transpose() const noexcept;
+
+		mat4 FM_CALL determinant() const noexcept;
+
+
+		static  mat4 FM_CALL identity();
 
 		friend std::ostream& operator<<(std::ostream& out, const mat4& s);
 
-		static FM_CALL mat4 ones();
+		friend const fm::vector4 FM_CALL operator*(const fm::mat4& mata,
+			const fm::vector4& vecb) noexcept;
 
-		friend vector4;
 	private:
 		fm::vector4 __data[4];
 	};
@@ -43,7 +53,6 @@ namespace fm {
 
 	const fm::vector4 FM_CALL operator*(const fm::mat4& mata,
 		const fm::vector4& vecb) noexcept;
-
 
 } // namespace fm
 
