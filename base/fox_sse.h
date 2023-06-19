@@ -184,10 +184,10 @@ namespace fm {
 			tc = _mm_movelh_ps(b, d); // 02 12 22 32
 			td = _mm_movehl_ps(d, b); // 03 13 23 33
 
-			fmStroeVec(ret[0]._v, ta);
-			fmStroeVec(ret[1]._v, ta);
-			fmStroeVec(ret[2]._v, ta);
-			fmStroeVec(ret[3]._v, ta);
+			fmStroeVec(ret[0], ta);
+			fmStroeVec(ret[1], ta);
+			fmStroeVec(ret[2], ta);
+			fmStroeVec(ret[3], ta);
 
 		}
 	}

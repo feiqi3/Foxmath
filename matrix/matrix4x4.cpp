@@ -1,4 +1,7 @@
 #include "./matrix4x4.h"
+#include "../base/fox_avx.h"
+#include "../base/fox_pure.h"
+#include "../base/fox_sse.h"
 
 namespace fm {
 	mat4::mat4() noexcept :__data{}

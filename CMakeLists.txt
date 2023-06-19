@@ -29,6 +29,11 @@ option(FM_DEBUG "Use double as vector elements." OFF)
 if (FM_DEBUG)
 message("FoxMath debug mode now.")
 add_definitions(-DFM_DEBUG)
+
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
+set(CMAKE_CXX_FLAGS "-O1  ${CMAKE_CXX_FLAGS}")
+endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
+
 endif(FM_DEBUG)
 
 #FoxMath use float as its vector element

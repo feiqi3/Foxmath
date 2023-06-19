@@ -36,12 +36,6 @@ namespace fm {
 		memcpy(this->__data._v, in.__data._v, 4 * sizeof(FMFLOAT));
 	}
 
-	fm::vector4::vector4(vector3&& in)FMTHROW
-	{
-		__data._v = in.__data._v;
-		in.__data._v = nullptr;
-	}
-
 	FMFLOAT& FM_CALL vector4::operator[](size_t t) FMTHROW
 	{
 #ifdef FM_DEBUG

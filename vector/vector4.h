@@ -12,6 +12,8 @@
 namespace fm {
 
 
+	class vector3;
+	class mat4;
 
 	class vector4 {
 	public:
@@ -25,7 +27,6 @@ namespace fm {
 		friend class vector3;
 
 		vector4(const vector3& in) FMTHROW;
-		vector4(vector3&& in) FMTHROW;
 		FMFLOAT& FM_CALL  operator[](size_t t) FMTHROW;
 
 
@@ -67,12 +68,12 @@ namespace fm {
 
 		friend class mat4;
 
-		friend const fm::vector4 FM_CALL operator*(const fm::vector4& veca,
-			const fm::mat4& matb) FMTHROW;
+		friend const vector4 FM_CALL operator*(const vector4& veca,
+			const mat4& matb) FMTHROW;
 
 
-		friend const fm::vector4 FM_CALL operator*(const fm::mat4& mata,
-			const fm::vector4& vecb) FMTHROW;
+		friend const vector4 FM_CALL operator*(const mat4& mata,
+			const vector4& vecb) FMTHROW;
 
 	protected:
 		vector4(const simd::fmAlignFLoat4& in);

@@ -4,8 +4,6 @@
 #include <cassert>
 #include <stdint.h>
 
-#define FM_DEBUG
-
 //**NOTE**
 // There is only one calling convention under x86-64, a strange fastcall
 // https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170
@@ -93,9 +91,9 @@
 
 namespace fm {
 
-	namespace simd {
+namespace simd {
 
-		// Default use float as vector's element
+// Default use float as vector's element
 #if !defined(_FM_USE_DOUBLE) && !defined(_FM_USE_FLOAT)
 #define _FM_USE_FLOAT
 #endif
@@ -104,32 +102,32 @@ namespace fm {
 #define FMFLOAT double
 #if defined(_FM_AVX2_)
 #define FM_ALIGN_REQ 32
-		using _fm_vec4 = __m256d;
+using _fm_vec4 = __m256d;
 #endif
 #elif defined(_FM_USE_FLOAT)
 #define FMFLOAT float
 #if defined(_FM_SSE4_)
 #define FM_ALIGN_REQ 16
-		using _fm_vec4 = __m128;
+using _fm_vec4 = __m128;
 #endif
 #endif
 
 #if defined(_FM_PURE_) || (!defined(_FM_SSE4_) && !defined(_FM_AVX2_))
 #define FM_ALIGN_REQ 8
-		using _fm_vec4 = struct {
-			FMFLOAT v[4];
-		};
+using _fm_vec4 = struct {
+  FMFLOAT v[4];
+};
 #endif
-		// Mem align check
-		void FM_INLINE FM_CALL MEM_ALIGN_CHECK(const void* ptr, size_t alignment) {
-			assert((int64_t)ptr % alignment == 0);
-		}
+// Mem align check
+void FM_INLINE FM_CALL MEM_ALIGN_CHECK(const void *ptr, size_t alignment) {
+  assert(((long long)ptr) % alignment == 0);
+}
 
-		struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
-			FMFLOAT _v[4];
-			FMFLOAT& operator[](size_t t) { return _v[t]; }
-		};
-	} // namespace simd
+struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
+  FMFLOAT _v[4];
+  FMFLOAT &operator[](size_t t) { return _v[t]; }
+};
+} // namespace simd
 } // namespace fm
 
 // | a | b | c | d | -> vec layout in memory
@@ -161,19 +159,18 @@ namespace fm {
 // It is confusing and is a total chaos.
 // So I leave a Macro and a long comment here
 // To make EVERYTHING CLEAR
-
 #if __cplusplus >= 201703L
-#define FM_NEW new
+#define FM_NEW(x) new x
 #else
+#define FM_NEW(x) (x *)_mm_alloc(sizeof(x), FM_ALIGN_REQ)
 #if !defined(_MSC_VER)
-#error                                                                         \
-    "Under std:c++17, operator new cannot assure the alignment of struct, which may cause crash when using simd instruction"
+#warning                                                                       \
+    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_NEW(x) instead when allocating memory for vector/mat"
 #else
 #pragma throw_warning(                                                         \
     10002,                                                                     \
-    "Under c++17, operator new cannot assure the alignment of struct, which may cause crash when using simd instruction")
+    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_NEW(x) instead when allocating memory for vector/mat")
 #endif
-
 #endif
 
 #endif // BASIC_DEF_H

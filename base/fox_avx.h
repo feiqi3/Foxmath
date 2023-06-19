@@ -1,6 +1,7 @@
 #ifndef FOX_AVX_H__
 #define FOX_AVX_H__
 #include"basic_def.h"
+#include <iostream>
 
 #if defined (_FM_AVX2_) && defined (_FM_USE_DOUBLE)
 
@@ -57,8 +58,9 @@ namespace fm {
 			return _mm256_mul_pd(veca, fmSpreadVec(factor));
 		}
 
-		_fm_vec4 FM_INLINE FM_CALL fmVecMul(const _fm_vec4& veca, const _fm_vec4& vecb) {
-			return _mm256_mul_pd(veca, vecb);
+		_fm_vec4 FM_INLINE FM_CALL fmVecMul( _fm_vec4& veca,  _fm_vec4& vecb) {
+			auto ret = _mm256_mul_pd(veca, vecb);
+			return ret;
 		}
 
 		_fm_vec4 FM_INLINE FM_CALL fmVecSub(const _fm_vec4& veca, const _fm_vec4& vecb) {
@@ -127,7 +129,7 @@ namespace fm {
 			return fmGetElem(temp, 0);
 		}
 
-		FMFLOAT FM_INLINE FM_CALL fmVecDot(const _fm_vec4& veca, const _fm_vec4& vecb) {
+		FMFLOAT FM_INLINE FM_CALL fmVecDot(_fm_vec4& veca,_fm_vec4& vecb) {
 			_fm_vec4 ab = fmVecMul(veca, vecb);
 
 			//veca(a,b,c,d) vecb(e,f,g,h)
