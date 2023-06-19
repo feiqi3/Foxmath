@@ -101,7 +101,8 @@ namespace simd {
 #if defined(_FM_USE_DOUBLE)
 #define FMFLOAT double
 #if defined(_FM_AVX2_)
-#define FM_ALIGN_REQ 32
+//https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-load-pd.html
+#define FM_ALIGN_REQ 256
 using _fm_vec4 = __m256d;
 #endif
 #elif defined(_FM_USE_FLOAT)
