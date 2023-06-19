@@ -11,9 +11,9 @@ namespace fm {
 
 	namespace simd {
 		_fm_vec4 FM_INLINE FM_CALL fmLoadVecP(const FMFLOAT* pd) {
-			//AVX Intinsics need 32 mem align
+			//AVX Intinsics for pd need 32 mem align
 #if defined (FM_DEBUG)
-			MEM_ALIGN_CHECK(pd, 32);
+			MEM_ALIGN_CHECK(pd, FM_ALIGN_REQ);
 #endif
 			return _mm256_load_pd(pd);
 		}
@@ -27,7 +27,7 @@ namespace fm {
 			return _mm256_set_pd(d, c, b, a);
 		}
 
-		void FM_INLINE FM_CALL fmStroeVec(fmAlignFLoat4& f4, _fm_vec4 vec) {
+		void FM_INLINE FM_CALL fmStroeVec(fmAlignFLoat4& f4,const _fm_vec4& vec) {
 			_mm256_store_pd(f4._v, vec);
 		}
 
@@ -59,7 +59,7 @@ namespace fm {
 		}
 
 		_fm_vec4 FM_INLINE FM_CALL fmVecMul( _fm_vec4& veca,  _fm_vec4& vecb) {
-			auto ret = _mm256_mul_pd(veca, vecb);
+			alignas(32) auto ret = _mm256_mul_pd(veca, vecb);
 			return ret;
 		}
 

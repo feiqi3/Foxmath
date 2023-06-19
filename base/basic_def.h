@@ -70,7 +70,7 @@
 
 #define FM_ALIGNED(x) struct alignas(x)
 
-#define FM_INLINE inline
+#define FM_INLINE __forceinline
 
 #if defined(_M_ARM) || defined(_M_ARM64)
 #if !defined(_MSC_VER)
@@ -102,7 +102,7 @@ namespace simd {
 #define FMFLOAT double
 #if defined(_FM_AVX2_)
 //https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-load-pd.html
-#define FM_ALIGN_REQ 256
+#define FM_ALIGN_REQ 32
 using _fm_vec4 = __m256d;
 #endif
 #elif defined(_FM_USE_FLOAT)
@@ -161,6 +161,7 @@ struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
 // So I leave a Macro and a long comment here
 // To make EVERYTHING CLEAR
 #if __cplusplus >= 201703L
+//TODO: make FM_NEW can call construction function
 #define FM_NEW(x) new x
 #else
 #define FM_NEW(x) (x *)_mm_alloc(sizeof(x), FM_ALIGN_REQ)
