@@ -177,6 +177,27 @@ namespace fm {
 			return fmGetElem(temp, 0);
 		}
 
+		void FM_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4* vecs, fmAlignFLoat4* ret) {
+			_fm_vec4 v0, v1, v2, v3;
+			v0 = fmLoadVecP(vecs[0]._v);
+			v1 = fmLoadVecP(vecs[1]._v);
+			v2 = fmLoadVecP(vecs[2]._v);
+			v3 = fmLoadVecP(vecs[3]._v);
+
+			__m256d t1 = _mm256_permute4x64_pd(v0, 0b01001110);//a2,a3,a0,a1
+			__m256d t2 = _mm256_permute4x64_pd(v1, 0b01001110);//b2,b3,b0,b1
+			__m256d t3 = _mm256_permute4x64_pd(v2, 0b01001110);//c2,c3,c0,c1
+			__m256d t4 = _mm256_permute4x64_pd(v3, 0b01001110);//d2,d3,d0,d1
+			__m256d t5 = _mm256_blend_pd(v0, t3, 0b1100);//a0,a1,c0,c1
+			__m256d t6 = _mm256_blend_pd(v1, t4, 0b1100);//b0,b1,d0,d1
+			__m256d t7 = _mm256_blend_pd(t1, v2, 0b1100);//a2,a3,c2,c3
+			__m256d t8 = _mm256_blend_pd(t2, v3, 0b1100);//b2,b3,d2,d3
+			_mm256_storeu_pd(ret[0]._v, _mm256_unpacklo_pd(t5, t6));//a0,b0,c0,d0
+			_mm256_storeu_pd(ret[1]._v, _mm256_unpackhi_pd(t5, t6));//a1,b1,c1,d1
+			_mm256_storeu_pd(ret[2]._v, _mm256_unpacklo_pd(t7, t8));//a2,b2,c2,d2
+			_mm256_storeu_pd(ret[3]._v, _mm256_unpackhi_pd(t7, t8));//a3,b3,c3,d3
+
+		}
 	}
 }
 #endif//_FM_AVX2_

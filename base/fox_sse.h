@@ -166,6 +166,30 @@ namespace fm {
 			return fmGetElem(temp, 0);
 		}
 
+		void FM_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4* vecs, fmAlignFLoat4* ret) {
+			_fm_vec4 v0, v1, v2, v3;
+			v0 = fmLoadVecP(vecs[0]._v);
+			v1 = fmLoadVecP(vecs[1]._v);
+			v2 = fmLoadVecP(vecs[2]._v);
+			v3 = fmLoadVecP(vecs[3]._v);
+
+			_fm_vec4 a, b, c, d;
+			a = _mm_unpacklo_ps(v0, v1);// 00 10 01 11
+			b = _mm_unpackhi_ps(v0, v1);// 02 12 03 13
+			c = _mm_unpacklo_ps(v2, v3);// 20 30 21 31
+			d = _mm_unpacklo_ps(v2, v3);// 22 32 23 33
+			_fm_vec4 ta, tb, tc, td;
+			ta = _mm_movelh_ps(a, c); // 00 10 20 30
+			tb = _mm_movehl_ps(c, a); // 01 11 21 31
+			tc = _mm_movelh_ps(b, d); // 02 12 22 32
+			td = _mm_movehl_ps(d, b); // 03 13 23 33
+
+			fmStroeVec(ret[0]._v, ta);
+			fmStroeVec(ret[1]._v, ta);
+			fmStroeVec(ret[2]._v, ta);
+			fmStroeVec(ret[3]._v, ta);
+
+		}
 	}
 }
 #endif

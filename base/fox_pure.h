@@ -168,6 +168,16 @@ namespace fm {
 			return vec.v[0] + vec.v[1] + vec.v[2] + vec.v[3];
 		}
 
+		void FM_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4* vecs, fmAlignFLoat4* ret) {
+			for (char i = 0; i < 4; i++)
+			{
+				for (char j = 0; j < 4; j++)
+				{
+					ret[i]._v[j] = vecs[j]._v[i];
+				}
+			}
+		}
+
 	}
 }
 #endif //_FM_PURE_
