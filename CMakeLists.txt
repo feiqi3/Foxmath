@@ -31,7 +31,8 @@ message("FoxMath debug mode now.")
 add_definitions(-DFM_DEBUG)
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
-set(CMAKE_CXX_FLAGS "-O1  ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-g ${CMAKE_CXX_FLAGS}")
+message("Compile flags add \'-g\'")
 endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 
 endif(FM_DEBUG)
