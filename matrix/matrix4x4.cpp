@@ -1,7 +1,7 @@
 #include "./matrix4x4.h"
 
 namespace fm {
-	mat4::mat4() noexcept :__data{ vector4(0,0,0,0),vector4(0,0,0,0),vector4(0,0,0,0),vector4(0,0,0,0) }
+	mat4::mat4() noexcept :__data{}
 	{}
 
 	mat4::mat4(FMFLOAT _m00, FMFLOAT _m01, FMFLOAT _m02, FMFLOAT _m03, FMFLOAT _m10, FMFLOAT _m11, FMFLOAT _m12, FMFLOAT _m13, FMFLOAT _m20, FMFLOAT _m21, FMFLOAT _m22, FMFLOAT _m23, FMFLOAT _m30, FMFLOAT _m31, FMFLOAT _m32, FMFLOAT _m33)
@@ -84,7 +84,10 @@ namespace fm {
 	//TODO: simd function support
 	mat4 FM_CALL mat4::transpose() const noexcept
 	{
-		//TODO: 
+		mat4 ret;
+		//Magic
+		simd::fmMat4Transpose((simd::fmAlignFLoat4*)this->__data, (simd::fmAlignFLoat4*)ret.__data);
+		return ret;
 	}
 
 	static mat4 mat4Ones({ 1,0,0,0 }, { 0,1,0,0 }, { 0,0,1,0 }, { 0,0,0,1 });
