@@ -78,8 +78,6 @@ namespace fm {
 	protected:
 		vector4(const simd::fmAlignFLoat4& in);
 
-		vector4(const simd::_fm_vec4& in);
-
 	protected:
 		simd::fmAlignFLoat4 __data;
 	};

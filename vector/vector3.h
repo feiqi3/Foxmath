@@ -39,9 +39,6 @@ namespace fm {
 		const vector3 FM_CALL cross(const vector3& b) const FMTHROW;
 	protected:
 		vector3(const simd::fmAlignFLoat4& in);
-
-		vector3(const simd::_fm_vec4& in);
-
 	private:
 		fm::simd::fmAlignFLoat4 __data;
 

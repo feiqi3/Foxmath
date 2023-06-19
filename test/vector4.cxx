@@ -1,8 +1,6 @@
-#include "base/basic_def.h"
 #include <iostream>
 #include <cassert>
-#include "base/fox_avx.h"
-#include "vector/vector4.h"  
+#include "../Header/vector4.h"
 
 void dotTest();
 
@@ -29,7 +27,7 @@ void hasNanTest();
 void memAlignTest();
 
 int main() {
-	const int tt = FM_ALIGN_REQ;
+	const int tt = fm::simd::FM_ALIGN_REQ;
 	FMFLOAT Ttt = 3.0;
 	dotTest();
 	crossTest();
@@ -138,10 +136,10 @@ void memAlignTest() {
 	for (int i = 0; i < 1000; ++i) {
 		totalAlloctMem += 8 * sizeof(FMFLOAT);
 		fm::simd::fmAlignFLoat4 tmp{1,2,3,4};
-		auto a = FM_NEW(fm::vector4)(tmp._v);
-		auto b = FM_NEW(fm::vector4)(tmp._v);
+		auto a = FM_ALIGN_NEW(fm::vector4)(tmp._v);
+		auto b = FM_ALIGN_NEW(fm::vector4)(tmp._v);
 		a->dot(*b);
-		fm::simd::MEM_ALIGN_CHECK(a, FM_ALIGN_REQ);
+		fm::simd::MEM_ALIGN_CHECK(a, fm::simd::FM_ALIGN_REQ);
 	}
 	std::cout<<"Memory align test has allocte "<<totalAlloctMem<<"B, test passed.\n";
 }

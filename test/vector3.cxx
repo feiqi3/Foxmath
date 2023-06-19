@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <cassert>
-#include "vector/vector3.h"  
+#include "../Header/vector3.h"
 
 void dotTest();
 
@@ -133,7 +133,7 @@ void hasNanTest() {
 
 void memAlignTest(){
 	for (int i = 0; i < 1000; ++i) {
-		auto t = FM_NEW(fm::vector3); 
-		fm::simd::MEM_ALIGN_CHECK(t, FM_ALIGN_REQ);
+		auto t = FM_ALIGN_NEW(fm::vector3)(2,3,5); 
+		fm::simd::MEM_ALIGN_CHECK(t, fm::simd::FM_ALIGN_REQ);
 	}
 }

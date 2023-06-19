@@ -1,7 +1,5 @@
-#include "../matrix/matrix4x4.h"
-#include "vector/vector4.h"
+#include "../Header/matrix4x4.h"
 #include <iostream>
-#include <ostream>
 
 void MultiTest();
 void AddTest();

@@ -2,8 +2,9 @@
 #include "../base/fox_avx.h"
 #include "../base/fox_pure.h"
 #include "../base/fox_sse.h"
-#include <limits>
 #include <cmath>
+#include <limits>
+
 
 namespace fm {
 fm::vector3::vector3() FMTHROW : __data({0, 0, 0, 0}) {}
@@ -19,10 +20,6 @@ fm::vector3::vector3(const FMFLOAT *in) {
 vector3::vector3(const simd::fmAlignFLoat4 &in) {
   memcpy(this->__data._v, in._v, 4 * sizeof(FMFLOAT));
   __data._v[3] = 0;
-}
-
-vector3::vector3(const simd::_fm_vec4 &in) {
-  simd::fmStroeVec(this->__data, in);
 }
 
 fm::vector3::vector3(const fm::vector3 &in) FMTHROW {
@@ -53,7 +50,9 @@ const vector3 FM_CALL vector3::operator+(const vector3 &b) const FMTHROW {
   simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
   simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
   simd::_fm_vec4 ret = simd::fmVecAdd(veca, vecb);
-  return vector3(ret);
+  vector3 retVec;
+  fmStroeVec(retVec.__data, ret);
+  return retVec;
 }
 
 const vector3 FM_CALL vector3::operator-(const vector3 &b) const FMTHROW {
@@ -61,21 +60,27 @@ const vector3 FM_CALL vector3::operator-(const vector3 &b) const FMTHROW {
   simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
 
   simd::_fm_vec4 ret = simd::fmVecSub(veca, vecb);
-  return vector3(ret);
+  vector3 retVec;
+  fmStroeVec(retVec.__data, ret);
+  return retVec;
 }
 
 const vector3 FM_CALL vector3::operator*(const vector3 &b) const FMTHROW {
   simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
   simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
   simd::_fm_vec4 ret = simd::fmVecMul(veca, vecb);
-  return vector3(ret);
+  vector3 retVec;
+  fmStroeVec(retVec.__data, ret);
+  return retVec;
 }
 
 const vector3 FM_CALL vector3::operator/(const vector3 &b) const FMTHROW {
   simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
   simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
   simd::_fm_vec4 ret = simd::fmVecDiv(veca, vecb);
-  return vector3(ret);
+  vector3 retVec;
+  fmStroeVec(retVec.__data, ret);
+  return retVec;
 }
 
 const FMFLOAT FM_CALL vector3::dot(const vector3 &b) const FMTHROW {
@@ -92,7 +97,9 @@ const vector3 FM_CALL vector3::cross(const vector3 &b) const FMTHROW {
   simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
   simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
   simd::_fm_vec4 ret = simd::fmVec3Cross(veca, vecb);
-  return vector3(ret);
+  vector3 retVec;
+  fmStroeVec(retVec.__data, ret);
+  return retVec;
 }
 
 FMFLOAT FM_CALL vector3::maxElement() const FMTHROW {
@@ -118,7 +125,10 @@ FMFLOAT FM_CALL vector3::length() const FMTHROW {
 
 vector3 FM_CALL vector3::square() const FMTHROW {
   simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data._v);
-  return vector3(simd::fmVecMul(vec, vec));
+  auto ret = (simd::fmVecMul(vec, vec));
+  vector3 retVec;
+  fmStroeVec(retVec.__data, ret);
+  return retVec;
 }
 
 vector3 FM_CALL vector3::sqrt() const FMTHROW {
@@ -126,13 +136,18 @@ vector3 FM_CALL vector3::sqrt() const FMTHROW {
   assert(__data._v[3] == 0);
 #endif // FM_DEBUG
   simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data._v);
-  return simd::fmVecSqrt(vec);
+  auto ret = simd::fmVecSqrt(vec);
+  vector3 retVec;
+  fmStroeVec(retVec.__data, ret);
+  return retVec;
 }
 
 const vector3 FM_CALL operator*(const vector3 &a, FMFLOAT b) FMTHROW {
   simd::_fm_vec4 veca = simd::fmLoadVecP(a.__data._v);
   simd::_fm_vec4 ret = simd::fmVecScale(veca, b);
-  return vector3(ret);
+  vector3 retVec;
+  fmStroeVec(retVec.__data, ret);
+  return retVec;
 }
 
 const vector3 FM_CALL operator/(const vector3 &a, FMFLOAT b) FMTHROW {

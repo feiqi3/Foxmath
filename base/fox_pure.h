@@ -3,7 +3,7 @@
 #include"basic_def.h"
 #include <cstring>
 #include<algorithm>
-#if defined (_FM_PURE_)
+#if defined (_FM_PURE_)&& (!defined(_FM_SSE4_) && !defined(_FM_AVX2_))
 
 #include <cmath>
 namespace fm {

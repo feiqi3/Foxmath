@@ -100,21 +100,20 @@ namespace simd {
 
 #if defined(_FM_USE_DOUBLE)
 #define FMFLOAT double
+extern inline constexpr size_t FM_ALIGN_REQ = 32
 #if defined(_FM_AVX2_)
 //https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-load-pd.html
-#define FM_ALIGN_REQ 32
 using _fm_vec4 = __m256d;
 #endif
 #elif defined(_FM_USE_FLOAT)
 #define FMFLOAT float
+extern inline constexpr size_t FM_ALIGN_REQ = 16;
 #if defined(_FM_SSE4_)
-#define FM_ALIGN_REQ 16
 using _fm_vec4 = __m128;
 #endif
 #endif
 
-#if defined(_FM_PURE_) || (!defined(_FM_SSE4_) && !defined(_FM_AVX2_))
-#define FM_ALIGN_REQ 8
+#if defined(_FM_PURE_) && (!defined(_FM_SSE4_) && !defined(_FM_AVX2_))
 using _fm_vec4 = struct {
   FMFLOAT v[4];
 };
@@ -162,17 +161,21 @@ struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
 // To make EVERYTHING CLEAR
 #if __cplusplus >= 201703L
 //TODO: make FM_NEW can call construction function
-#define FM_NEW(x) new x
+#define FM_ALIGN_NEW(x) new x
+#define FM_DELETE(x) delete x
 #else
-#define FM_NEW(x) (x *)_mm_alloc(sizeof(x), FM_ALIGN_REQ)
+//Replacement new
+#define FM_ALIGN_NEW(x) new (_mm_malloc(sizeof(x), fm::simd::FM_ALIGN_REQ)) x
+#define FM_DELETE(x) _mm_free(x)
 #if !defined(_MSC_VER)
 #warning                                                                       \
-    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_NEW(x) instead when allocating memory for vector/mat"
+    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat"
 #else
 #pragma throw_warning(                                                         \
     10002,                                                                     \
-    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_NEW(x) instead when allocating memory for vector/mat")
+    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat")
 #endif
 #endif
+
 
 #endif // BASIC_DEF_H
