@@ -17,6 +17,8 @@
 #define _FM_USE_FASTCALL_
 #endif
 
+#define FMTHROW noexcept
+
 #ifdef _FM_USE_VECTORCALL_
 // MSVC only, fast than fastcall/stdcall
 // https://learn.microsoft.com/en-us/cpp/cpp/vectorcall?view=msvc-170
@@ -91,9 +93,9 @@
 
 namespace fm {
 
-namespace simd {
+	namespace simd {
 
-// Default use float as vector's element
+		// Default use float as vector's element
 #if !defined(_FM_USE_DOUBLE) && !defined(_FM_USE_FLOAT)
 #define _FM_USE_FLOAT
 #endif
@@ -102,32 +104,32 @@ namespace simd {
 #define FMFLOAT double
 #if defined(_FM_AVX2_)
 #define FM_ALIGN_REQ 32
-using _fm_vec4 = __m256d;
+		using _fm_vec4 = __m256d;
 #endif
 #elif defined(_FM_USE_FLOAT)
 #define FMFLOAT float
 #if defined(_FM_SSE4_)
 #define FM_ALIGN_REQ 16
-using _fm_vec4 = __m128;
+		using _fm_vec4 = __m128;
 #endif
 #endif
 
 #if defined(_FM_PURE_) || (!defined(_FM_SSE4_) && !defined(_FM_AVX2_))
 #define FM_ALIGN_REQ 8
-using _fm_vec4 = struct {
-  FMFLOAT v[4];
-};
+		using _fm_vec4 = struct {
+			FMFLOAT v[4];
+		};
 #endif
-// Mem align check
-void FM_INLINE FM_CALL MEM_ALIGN_CHECK(const void *ptr, size_t alignment) {
-  assert((int64_t)ptr % alignment == 0);
-}
+		// Mem align check
+		void FM_INLINE FM_CALL MEM_ALIGN_CHECK(const void* ptr, size_t alignment) {
+			assert((int64_t)ptr % alignment == 0);
+		}
 
-struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
-  FMFLOAT _v[4];
-  FMFLOAT &operator[](size_t t) { return _v[t]; }
-};
-} // namespace simd
+		struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
+			FMFLOAT _v[4];
+			FMFLOAT& operator[](size_t t) { return _v[t]; }
+		};
+	} // namespace simd
 } // namespace fm
 
 // | a | b | c | d | -> vec layout in memory
