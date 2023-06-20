@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "../Header/vector4.h"
+#include "../Header/FoxVec4.h"
 
 void dotTest();
 

@@ -1,8 +1,7 @@
-#include "base/basic_def.h"
 #include <cmath>
 #include <iostream>
 #include <cassert>
-#include "../Header/vector3.h"
+#include "../Header/FoxVec3.h"
 
 void dotTest();
 
