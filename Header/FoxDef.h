@@ -1,5 +1,5 @@
-#ifndef BASIC_DEF_H
-#define BASIC_DEF_H
+#ifndef FOXDEF_H_
+#define FOXDEF_H_
 
 #include <cassert>
 #include <cstdint>
@@ -62,9 +62,7 @@ void FM_INLINE FM_CALL MEM_ALIGN_CHECK(const void *ptr, size_t alignment) {
 #warning                                                                       \
     "Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat"
 #else
-#pragma throw_warning(                                                         \
-    10002,                                                                     \
-    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat")
+#pragma message(__FILE__ "(" #__LINE__ ")" ": warning C" #_code_ ": " "Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat")
 #endif
 #endif
 

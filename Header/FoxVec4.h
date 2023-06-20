@@ -1,5 +1,5 @@
-#ifndef VECTOR4_H_
-#define VECTOR4_H_
+#ifndef FOXVEC4_H_
+#define FOXVEC4_H_
 
 #include "FoxDef.h"
 #include <cmath>

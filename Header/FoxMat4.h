@@ -1,7 +1,7 @@
-#ifndef MATRIX_4X4_H_
-#define MATRIX_4X4_H_
+#ifndef FOXMAT4_H_
+#define FOXMAT4_H_
 #include "FoxDef.h"
-#include "vector4.h"
+#include "FoxVec4.h"
 #include <ostream>
 namespace fm {
 
