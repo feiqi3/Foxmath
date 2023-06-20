@@ -91,43 +91,43 @@
 
 namespace fm {
 
-namespace simd {
+	namespace simd {
 
-// Default use float as vector's element
+		// Default use float as vector's element
 #if !defined(_FM_USE_DOUBLE) && !defined(_FM_USE_FLOAT)
 #define _FM_USE_FLOAT
 #endif
 
 #if defined(_FM_USE_DOUBLE)
 #define FMFLOAT double
-extern inline constexpr size_t FM_ALIGN_REQ = 32
+		extern inline constexpr size_t FM_ALIGN_REQ = 32;
 #if defined(_FM_AVX2_)
-//https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-load-pd.html
-using _fm_vec4 = __m256d;
+		//https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-load-pd.html
+		using _fm_vec4 = __m256d;
 #endif
 #elif defined(_FM_USE_FLOAT)
 #define FMFLOAT float
-extern inline constexpr size_t FM_ALIGN_REQ = 16;
+		extern inline constexpr size_t FM_ALIGN_REQ = 16;
 #if defined(_FM_SSE4_)
-using _fm_vec4 = __m128;
+		using _fm_vec4 = __m128;
 #endif
 #endif
 
 #if defined(_FM_PURE_) && (!defined(_FM_SSE4_) && !defined(_FM_AVX2_))
-using _fm_vec4 = struct {
-  FMFLOAT v[4];
-};
+		using _fm_vec4 = struct {
+			FMFLOAT v[4];
+		};
 #endif
-// Mem align check
-void FM_INLINE FM_CALL MEM_ALIGN_CHECK(const void *ptr, size_t alignment) {
-  assert(((long long)ptr) % alignment == 0);
-}
+		// Mem align check
+		void FM_INLINE FM_CALL MEM_ALIGN_CHECK(const void* ptr, size_t alignment) {
+			assert(((long long)ptr) % alignment == 0);
+		}
 
-struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
-  FMFLOAT _v[4];
-  FMFLOAT &operator[](size_t t) { return _v[t]; }
-};
-} // namespace simd
+		struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
+			FMFLOAT _v[4];
+			FMFLOAT& operator[](size_t t) { return _v[t]; }
+		};
+	} // namespace simd
 } // namespace fm
 
 // | a | b | c | d | -> vec layout in memory
@@ -169,7 +169,7 @@ struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
 #define FM_DELETE(x) _mm_free(x)
 #if !defined(_MSC_VER)
 #warning                                                                       \
-    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat"
+"Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat"
 #else
 #pragma throw_warning(                                                         \
     10002,                                                                     \

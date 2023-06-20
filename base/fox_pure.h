@@ -155,6 +155,7 @@ namespace fm {
 			ret.v[0] = veca.v[1] * vecb.v[2] - veca.v[2] * vecb.v[1];
 			ret.v[1] = veca.v[2] * vecb.v[0] - veca.v[0] * vecb.v[2];
 			ret.v[2] = veca.v[0] * vecb.v[1] - veca.v[1] * vecb.v[0];
+			ret.v[3] = 0;
 			return ret;
 		}
 
