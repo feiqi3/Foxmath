@@ -2,7 +2,7 @@
 #define FOX_SSE_H_
 #include "basic_def.h"
 #include <iostream>
-#if defined (_FM_SSE4_) && defined (_FM_USE_FLOAT)
+#if defined (_FM_SSE4_) && defined (FOX_USE_FLOAT)
 
 namespace fm {
 
@@ -179,7 +179,7 @@ namespace fm {
 			c = _mm_unpacklo_ps(v2, v3);// 20 30 21 31
 			d = _mm_unpackhi_ps(v2, v3);// 22 32 23 33
 			_fm_vec4 ta, tb, tc, td;
-			ta = _mm_movelh_ps (a, c); // 00 10 20 30
+			ta = _mm_movelh_ps(a, c); // 00 10 20 30
 			tb = _mm_movehl_ps(c, a); // 01 11 21 31
 			tc = _mm_movelh_ps(b, d); // 02 12 22 32
 			td = _mm_movehl_ps(d, b); // 03 13 23 33

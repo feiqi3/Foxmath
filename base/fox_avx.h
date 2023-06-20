@@ -3,7 +3,7 @@
 #include"basic_def.h"
 #include <iostream>
 
-#if defined (_FM_AVX2_) && defined (_FM_USE_DOUBLE)
+#if defined (_FM_AVX2_) && defined (FOX_USE_DOUBLE)
 
 
 
@@ -27,7 +27,7 @@ namespace fm {
 			return _mm256_set_pd(d, c, b, a);
 		}
 
-		void FM_INLINE FM_CALL fmStroeVec(fmAlignFLoat4& f4,const _fm_vec4& vec) {
+		void FM_INLINE FM_CALL fmStroeVec(fmAlignFLoat4& f4, const _fm_vec4& vec) {
 			_mm256_store_pd(f4._v, vec);
 		}
 
@@ -58,7 +58,7 @@ namespace fm {
 			return _mm256_mul_pd(veca, fmSpreadVec(factor));
 		}
 
-		_fm_vec4 FM_INLINE FM_CALL fmVecMul( _fm_vec4& veca,  _fm_vec4& vecb) {
+		_fm_vec4 FM_INLINE FM_CALL fmVecMul(_fm_vec4& veca, _fm_vec4& vecb) {
 			alignas(32) auto ret = _mm256_mul_pd(veca, vecb);
 			return ret;
 		}
@@ -129,7 +129,7 @@ namespace fm {
 			return fmGetElem(temp, 0);
 		}
 
-		FMFLOAT FM_INLINE FM_CALL fmVecDot(_fm_vec4& veca,_fm_vec4& vecb) {
+		FMFLOAT FM_INLINE FM_CALL fmVecDot(_fm_vec4& veca, _fm_vec4& vecb) {
 			_fm_vec4 ab = fmVecMul(veca, vecb);
 
 			//veca(a,b,c,d) vecb(e,f,g,h)

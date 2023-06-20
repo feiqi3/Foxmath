@@ -80,7 +80,7 @@
 #endif
 #endif
 
-#if (defined(_FM_PURE_))
+#if (defined(FOX_PURE))
 #if !defined(_MSC_VER)
 #warning "SIMD Optimization is closed."
 #else
@@ -94,18 +94,18 @@ namespace fm {
 	namespace simd {
 
 		// Default use float as vector's element
-#if !defined(_FM_USE_DOUBLE) && !defined(_FM_USE_FLOAT)
-#define _FM_USE_FLOAT
+#if !defined(FOX_USE_DOUBLE) && !defined(FOX_USE_FLOAT)
+#define FOX_USE_FLOAT
 #endif
 
-#if defined(_FM_USE_DOUBLE)
+#if defined(FOX_USE_DOUBLE)
 #define FMFLOAT double
 		extern inline constexpr size_t FM_ALIGN_REQ = 32;
 #if defined(_FM_AVX2_)
 		//https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-load-pd.html
 		using _fm_vec4 = __m256d;
 #endif
-#elif defined(_FM_USE_FLOAT)
+#elif defined(FOX_USE_FLOAT)
 #define FMFLOAT float
 		extern inline constexpr size_t FM_ALIGN_REQ = 16;
 #if defined(_FM_SSE4_)
@@ -113,7 +113,7 @@ namespace fm {
 #endif
 #endif
 
-#if defined(_FM_PURE_) && (!defined(_FM_SSE4_) && !defined(_FM_AVX2_))
+#if defined(FOX_PURE) && (!defined(_FM_SSE4_) && !defined(_FM_AVX2_))
 		using _fm_vec4 = struct {
 			FMFLOAT v[4];
 		};
