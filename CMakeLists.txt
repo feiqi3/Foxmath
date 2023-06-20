@@ -6,43 +6,59 @@ if(NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU|MSVC")
     message(FATAL_ERROR "You are using a compiler not supported by FoxMath, you are using ${CMAKE_CXX_COMPILER_ID}")
 endif(NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU|MSVC")
 
-#Set C++ standard to 17
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
-    set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS}")
-    message("Compile flags add \'-std=c++17\'")
-
+#No use 
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC" )
-    set(CMAKE_CXX_FLAGS "/std:c++17 /Zc:__cplusplus ${CMAKE_CXX_FLAGS}")
-    message("Compile flags add \'/std:c++17\'")
     #https://learn.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-170
     message("Compile flags add \'/Zc:__cplusplus\'")
     endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 
-option(FM_SSE_SUPPORT "Enable sse support for programe." OFF)
-option(FM_AVX_SUPPORT "Enable avx support for programe." OFF)
-option(FM_FORCE_PURE "Enable avx support for programe." OFF)
-option(FM_USE_FLOAT "Use float as vector element." OFF)
-option(FM_USE_DOUBLE "Use double as vector elements." OFF)
-option(FM_DEBUG "Use double as vector elements." OFF)
+option(FOX_SSE_SUPPORT "Enable sse support for programe." OFF)
+option(FOX_AVX_SUPPORT "Enable avx/sse support for programe." OFF)
+option(FOX_FORCE_PURE "Disable simd support for programe." OFF)
+option(FOX_USE_FLOAT "Use float as vector element." OFF)
+option(FOX_USE_DOUBLE "Use double as vector elements." OFF)
+option(FOX_DEBUG "Use double as vector elements." OFF)
 
 #Open this will add some check for FoxMath
-if (FM_DEBUG)
+if (FOX_DEBUG)
 message("FoxMath debug mode now.")
 add_definitions(-DFM_DEBUG)
 
-if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
-set(CMAKE_CXX_FLAGS "-g ${CMAKE_CXX_FLAGS}")
-message("Compile flags add \'-g\'")
-endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
+    if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 
-endif(FM_DEBUG)
+    set(CMAKE_CXX_FLAGS "-g -fomit-frame-pointer ${CMAKE_CXX_FLAGS}")
+    message("Compile flags add \'-g\'")
+    message("Compile flags add \'-fomit-frame-pointer\'")
+
+    else()
+    set(CMAKE_CXX_FLAGS "/DEBUG:FULL /Oy /Zi ${CMAKE_CXX_FLAGS}")
+    message("Compile flags add \'/DEBUG:FULL\'")
+    message("Compile flags add \'/Oy\'")
+    endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
+
+else()
+message("FoxMath release mode now.")
+
+#release
+
+    if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
+    set(CMAKE_CXX_FLAGS "-O3 ${CMAKE_CXX_FLAGS}")
+    message("Compile flags add \'-O3\'")
+    else()
+    set(CMAKE_CXX_FLAGS "/Ox /Oi ${CMAKE_CXX_FLAGS}")
+    message("Compile flags add \'/Ox\'")
+    message("Compile flags add \'/Oi\'")
+    endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
+
+endif(FOX_DEBUG)
 
 #FoxMath use float as its vector element
-if (FM_USE_FLOAT)
+if (FOX_USE_FLOAT)
     message("FoxMath use float as vector elements now.")
-    add_definitions(-D_FM_USE_FLOAT)
+    add_definitions(-DFOX_USE_FLOAT)
     
-    if(NOT FM_FORCE_PURE AND ( FM_SSE_SUPPORT OR FM_AVX_SUPPORT))
+    if(NOT FOX_FORCE_PURE AND ( FOX_SSE_SUPPORT OR FOX_AVX_SUPPORT))
         message("SSE instructions will be used.")
         # GNU/Clang sse flag and msvc sse flag
         if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
@@ -56,13 +72,13 @@ if (FM_USE_FLOAT)
     else()
     #If float but no sse support then use pure mode
         set(FM_PURE on)
-    endif(NOT FM_FORCE_PURE AND ( FM_SSE_SUPPORT OR FM_AVX_SUPPORT))
+    endif(NOT FOX_FORCE_PURE AND ( FOX_SSE_SUPPORT OR FOX_AVX_SUPPORT))
 
 else()
     message("FoxMath use double as vector elements now.")
-    add_definitions(-D_FM_USE_DOUBLE)
+    add_definitions(-DFOX_USE_DOUBLE)
 
-    if(FM_AVX_SUPPORT AND NOT FM_FORCE_PURE )
+    if(FOX_AVX_SUPPORT AND NOT FOX_FORCE_PURE )
         message("AVX2 instructions will be used.")
         # GNU/Clang AVX2 flag and msvc AVX2 flag
         if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
@@ -75,13 +91,13 @@ else()
     else()
     #If use double but no avx support then use pure mode
         set(FM_PURE on)
-    endif(FM_AVX_SUPPORT AND NOT FM_FORCE_PURE)
-endif(FM_USE_FLOAT)
+    endif(FOX_AVX_SUPPORT AND NOT FOX_FORCE_PURE)
+endif(FOX_USE_FLOAT)
 
-if(FM_PURE OR FM_FORCE_PURE)
-    add_definitions(-D_FM_PURE_)
+if(FM_PURE OR FOX_FORCE_PURE)
+    add_definitions(-DFOX_PURE)
     message(WARNING "No simd instructions will be used.")
-endif(FM_PURE OR FM_FORCE_PURE)
+endif(FM_PURE OR FOX_FORCE_PURE)
 
 
 
