@@ -21,7 +21,7 @@ namespace fm {
 			return _mm_set_ps(d, c, b, a);
 		}
 
-		void FM_INLINE FM_CALL fmStroeVec(fmAlignFLoat4& ps, _fm_vec4 vec) {
+		void FM_INLINE FM_CALL fmStoreVec(fmAlignFLoat4& ps, _fm_vec4 vec) {
 			_mm_store_ps(ps._v, vec);
 		}
 
@@ -30,7 +30,7 @@ namespace fm {
 			assert(pos >= 0 && pos <= 3);
 #endif
 			fmAlignFLoat4 temp;
-			fmStroeVec(temp, vec);
+			fmStoreVec(temp, vec);
 			return temp[pos];
 		}
 
@@ -184,10 +184,10 @@ namespace fm {
 			tc = _mm_movelh_ps(b, d); // 02 12 22 32
 			td = _mm_movehl_ps(d, b); // 03 13 23 33
 
-			fmStroeVec(ret[0], ta);
-			fmStroeVec(ret[1], tb);
-			fmStroeVec(ret[2], tc);
-			fmStroeVec(ret[3], td);
+			fmStoreVec(ret[0], ta);
+			fmStoreVec(ret[1], tb);
+			fmStoreVec(ret[2], tc);
+			fmStoreVec(ret[3], td);
 
 		}
 	}

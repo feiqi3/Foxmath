@@ -25,7 +25,7 @@ namespace fm {
 			return ret;
 		}
 
-		void FM_INLINE FM_CALL fmStroeVec(fmAlignFLoat4& f4, _fm_vec4 vec) {
+		void FM_INLINE FM_CALL fmStoreVec(fmAlignFLoat4& f4, _fm_vec4 vec) {
 			memcpy(f4._v, vec.v, 4 * sizeof(FMFLOAT));
 		}
 

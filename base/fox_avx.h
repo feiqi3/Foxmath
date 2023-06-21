@@ -27,7 +27,7 @@ namespace fm {
 			return _mm256_set_pd(d, c, b, a);
 		}
 
-		void FM_INLINE FM_CALL fmStroeVec(fmAlignFLoat4& f4, const _fm_vec4& vec) {
+		void FM_INLINE FM_CALL fmStoreVec(fmAlignFLoat4& f4, const _fm_vec4& vec) {
 			_mm256_store_pd(f4._v, vec);
 		}
 
@@ -40,7 +40,7 @@ namespace fm {
 
 			//Use intrinsic to get element
 			fmAlignFLoat4 temp;
-			fmStroeVec(temp, vec);
+			fmStoreVec(temp, vec);
 			return temp[pos];
 		}
 
