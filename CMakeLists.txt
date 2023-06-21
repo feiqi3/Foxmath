@@ -101,7 +101,7 @@ endif(FM_PURE OR FOX_FORCE_PURE)
 
 
 
-file(GLOB SRC_LIST   "base/*.h" "base/*.hpp" "base/*.cpp" "vector/*.h" "vector/*.cpp" "matrix/*.h" "matrix/*.cpp")
+file(GLOB SRC_LIST   "base/*.h" "base/*.hpp" "base/*.cpp" "vector/*.h" "vector/*.cpp" "matrix/*.h" "matrix/*.cpp" "3dOperation/*.h" "3dOperation/*.cpp")
 add_library(FoxMath STATIC ${SRC_LIST})
 enable_testing()
 add_subdirectory(test)

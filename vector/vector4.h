@@ -63,6 +63,9 @@ namespace fm {
 			FMFLOAT b) FMTHROW;
 		friend const vector4  FM_CALL operator/(const vector4& a,
 			FMFLOAT b) FMTHROW;
+		
+		friend vector4 FM_CALL clamp( const vector4& a,const vector4& max,const vector4& min);
+
 
 		friend std::ostream& operator<<(std::ostream& out, const vector4& s);
 

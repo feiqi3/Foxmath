@@ -28,7 +28,11 @@ namespace fm {
 
 		friend const vector3 FM_CALL operator*(const vector3& a, FMFLOAT b) FMTHROW;
 
+		friend vector3 FM_CALL clamp( const vector3& a,const vector3& max,const vector3& min);
+
 		friend class vector4;
+
+
 
 		FMFLOAT FM_CALL maxElement() const FMTHROW;
 		FMFLOAT FM_CALL minElement() const FMTHROW;
