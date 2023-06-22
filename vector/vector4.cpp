@@ -69,6 +69,14 @@ const vector4 FM_CALL vector4::operator-(const vector4 &b) const FMTHROW {
   return retVec;
 }
 
+const vector4 FM_CALL vector4::operator-() const FMTHROW {
+  auto ret = fm::simd::fmLoadVecP(__data._v);
+  ret = simd::fmVecUnaryMinus(ret);
+  vector3 retVec;
+  fmStoreVec(retVec.__data, ret);
+  return retVec;
+}
+
 const vector4 FM_CALL vector4::operator*(const vector4 &b) const FMTHROW {
   simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
   simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
@@ -163,5 +171,34 @@ bool FM_CALL hasNan(const vector4 &in) FMTHROW {
   return std::isnan(in[0]) || std::isnan(in[1]) || std::isnan(in[2]) ||
          std::isnan(in[3]);
 }
+
+static const vector4 ONE{1, 1, 1};
+static const vector4 RIGHT{1, 0, 0};
+static const vector4 LEFT = -RIGHT;
+static const vector4 UP{0, 1, 0};
+static const vector4 DOWN = -UP;
+static const vector4 FORWARD{0, 0, 1};
+static const vector4 BACK = -FORWARD;
+
+FM_CALL vector4 vector4::ones()FMTHROW { return ONE; }
+FM_CALL vector4 vector4::right()FMTHROW{return RIGHT;}
+FM_CALL vector4 vector4::left()FMTHROW{return LEFT;}
+FM_CALL vector4 vector4::up()FMTHROW{return UP;}
+FM_CALL vector4 vector4::down()FMTHROW{return DOWN;}
+FM_CALL vector4 vector4::forward()FMTHROW{return FORWARD;}
+FM_CALL vector4 vector4::back()FMTHROW{return BACK;}
+
+   FMFLOAT &FM_CALL vector4::x() FMTHROW{
+    return __data[0];
+  }
+   FMFLOAT &FM_CALL vector4::y() FMTHROW{
+    return __data[1];
+  }
+   FMFLOAT &FM_CALL vector4::z() FMTHROW{
+    return __data[2];
+  }
+   FMFLOAT &FM_CALL vector4::w() FMTHROW{
+    return __data[3];
+  }
 
 } // namespace fm

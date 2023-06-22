@@ -3,8 +3,8 @@
 #include "../base/fox_pure.h"
 #include "../base/fox_sse.h"
 #include <cmath>
+#include <ios>
 #include <limits>
-
 
 namespace fm {
 fm::vector3::vector3() FMTHROW : __data({0, 0, 0, 0}) {}
@@ -60,6 +60,14 @@ const vector3 FM_CALL vector3::operator-(const vector3 &b) const FMTHROW {
   simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
 
   simd::_fm_vec4 ret = simd::fmVecSub(veca, vecb);
+  vector3 retVec;
+  fmStoreVec(retVec.__data, ret);
+  return retVec;
+}
+
+const vector3 FM_CALL vector3::operator-() const FMTHROW {
+  auto ret = fm::simd::fmLoadVecP(__data._v);
+  ret = simd::fmVecUnaryMinus(ret);
   vector3 retVec;
   fmStoreVec(retVec.__data, ret);
   return retVec;
@@ -162,4 +170,30 @@ const vector3 FM_CALL operator*(FMFLOAT b, const vector3 &a) FMTHROW {
 bool FM_CALL hasNan(const vector3 &in) FMTHROW {
   return std::isnan(in[0]) || std::isnan(in[1]) || std::isnan(in[2]);
 }
+static const vector3 ONE{1, 1, 1};
+static const vector3 RIGHT{1, 0, 0};
+static const vector3 LEFT = -RIGHT;
+static const vector3 UP{0, 1, 0};
+static const vector3 DOWN = -UP;
+static const vector3 FORWARD{0, 0, 1};
+static const vector3 BACK = -FORWARD;
+
+FM_CALL vector3 vector3::ones() FMTHROW { return ONE; }
+FM_CALL vector3 vector3::right() FMTHROW { return RIGHT; }
+FM_CALL vector3 vector3::left() FMTHROW { return LEFT; }
+FM_CALL vector3 vector3::up() FMTHROW { return UP; }
+FM_CALL vector3 vector3::down() FMTHROW { return DOWN; }
+FM_CALL vector3 vector3::forward() FMTHROW { return FORWARD; }
+FM_CALL vector3 vector3::back() FMTHROW { return BACK; }
+
+		 FMFLOAT& FM_CALL vector3::x() FMTHROW{
+      return __data[0];
+    }
+		 FMFLOAT& FM_CALL vector3::y() FMTHROW{
+      return __data[1];
+    }
+		 FMFLOAT& FM_CALL vector3::z() FMTHROW{
+      return __data[2];
+    }
+
 } // namespace fm

@@ -25,6 +25,8 @@ namespace fm {
 
 		const mat4 FM_CALL operator*(const mat4& b) const FMTHROW;
 
+		const mat4 FM_CALL operator*(FMFLOAT b) const FMTHROW;
+
 		const mat4 FM_CALL operator+(const mat4& b) const FMTHROW;
 
 		const mat4 FM_CALL operator-(const mat4& b) const FMTHROW;
@@ -37,6 +39,8 @@ namespace fm {
 
 
 		static  mat4 FM_CALL identity();
+
+		static mat4 FM_CALL zeros();
 
 		friend std::ostream& operator<<(std::ostream& out, const mat4& s);
 
@@ -53,6 +57,9 @@ namespace fm {
 
 	const fm::vector4 FM_CALL operator*(const fm::mat4& mata,
 		const fm::vector4& vecb) FMTHROW;
+
+	const fm::mat4 FM_CALL operator*(FMFLOAT a,
+		const fm::mat4& matb) FMTHROW;
 
 } // namespace fm
 

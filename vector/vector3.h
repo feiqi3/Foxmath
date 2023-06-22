@@ -15,10 +15,26 @@ namespace fm {
 
 		FMFLOAT& FM_CALL  operator[](size_t t) FMTHROW;
 
+		//constants
+		static FM_CALL vector3 ones() FMTHROW;
+		static FM_CALL vector3 right() FMTHROW;
+		static FM_CALL vector3 left() FMTHROW;
+		static FM_CALL vector3 up() FMTHROW;
+		static FM_CALL vector3 down() FMTHROW;
+		static FM_CALL vector3 forward() FMTHROW;
+		static FM_CALL vector3 back() FMTHROW;
+
+		 FMFLOAT& FM_CALL x() FMTHROW;
+		 FMFLOAT& FM_CALL y() FMTHROW;
+		 FMFLOAT& FM_CALL z() FMTHROW;
+
 		const FMFLOAT& FM_CALL operator[](size_t t) const FMTHROW;
+		
 		const vector3  FM_CALL operator+(const vector3& b) const FMTHROW;
 
 		const vector3  FM_CALL operator-(const vector3& b) const FMTHROW;
+
+		const vector3  FM_CALL operator-() const FMTHROW;
 
 		const vector3  FM_CALL operator*(const vector3& b) const FMTHROW;
 
@@ -28,11 +44,11 @@ namespace fm {
 
 		friend const vector3 FM_CALL operator*(const vector3& a, FMFLOAT b) FMTHROW;
 
-		friend vector3 FM_CALL clamp( const vector3& a,const vector3& max,const vector3& min);
+		friend vector3 FM_CALL clamp( const vector3& a,const vector3& max,const vector3& min)FMTHROW;
+
+   		friend	FM_CALL vector3 abs(const vector3& vec)FMTHROW;
 
 		friend class vector4;
-
-
 
 		FMFLOAT FM_CALL maxElement() const FMTHROW;
 		FMFLOAT FM_CALL minElement() const FMTHROW;
