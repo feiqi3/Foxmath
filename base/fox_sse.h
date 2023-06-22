@@ -190,6 +190,14 @@ namespace fm {
 			fmStoreVec(ret[3], td);
 
 		}
+
+		_fm_vec4 FM_INLINE FM_CALL fmVecUnaryMinus(const _fm_vec4& vec) {
+			return _mm_xor_ps(vec, _mm_set1_ps( -0.0f ) );
+		}
+
+		_fm_vec4 FM_INLINE FM_CALL fmVecAbs(const _fm_vec4& vec) {
+			return _mm_andnot_ps( _mm_set1_ps( -0.0f ), vec);
+		}
 	}
 }
 #endif
