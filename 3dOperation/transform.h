@@ -9,18 +9,18 @@ class vector3;
 
 class mat4;
 
-fm::mat4 FM_CALL translate(const fm::mat4 &in, const fm::vector3 &vector);
+fm::mat4 FM_CALL translate(const fm::mat4 &in, const fm::vector3 &vector)FMTHROW;
 
-fm::mat4 FM_CALL scale(const fm::mat4 &in, const fm::vector3 &vector);
+fm::mat4 FM_CALL scale(const fm::mat4 &in, const fm::vector3 &vector)FMTHROW;
 
 fm::mat4 FM_CALL rotate(const fm::mat4 &in, const fm::vector3 &axis,
-                        FMFLOAT angle);
+                        FMFLOAT angle)FMTHROW;
 
-fm::mat4 FM_CALL rotate_around_x(FMFLOAT angle);
+fm::mat4 FM_CALL rotate_around_x(FMFLOAT angle)FMTHROW;
 
-fm::mat4 FM_CALL rotate_around_y(FMFLOAT angle);
+fm::mat4 FM_CALL rotate_around_y(FMFLOAT angle)FMTHROW;
 
-fm::mat4 FM_CALL rotate_around_z(FMFLOAT angle);
+fm::mat4 FM_CALL rotate_around_z(FMFLOAT angle)FMTHROW;
 
 } // namespace fm
 
