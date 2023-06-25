@@ -202,6 +202,47 @@ void FM_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4 *vecs,
   _mm256_storeu_pd(ret[3]._v, _mm256_unpackhi_pd(t7, t8)); // a3,b3,c3,d3
 }
 
+void FM_INLINE FM_CALL fmMat4TransposeVec(const _fm_vec4 *vecs,
+                                       _fm_vec4 *ret) {
+
+  __m256d t1 = _mm256_permute4x64_pd(vecs[0], 0b01001110);      // a2,a3,a0,a1
+  __m256d t2 = _mm256_permute4x64_pd(vecs[1], 0b01001110);      // b2,b3,b0,b1
+  __m256d t3 = _mm256_permute4x64_pd(vecs[2], 0b01001110);      // c2,c3,c0,c1
+  __m256d t4 = _mm256_permute4x64_pd(vecs[3], 0b01001110);      // d2,d3,d0,d1
+  __m256d t5 = _mm256_blend_pd(vecs[0], t3, 0b1100);            // a0,a1,c0,c1
+  __m256d t6 = _mm256_blend_pd(vecs[1], t4, 0b1100);            // b0,b1,d0,d1
+  __m256d t7 = _mm256_blend_pd(t1, vecs[2], 0b1100);            // a2,a3,c2,c3
+  __m256d t8 = _mm256_blend_pd(t2, vecs[3], 0b1100);            // b2,b3,d2,d3
+  ret[0] = _mm256_unpacklo_pd(t5, t6); // a0,b0,c0,d0
+  ret[1] = _mm256_unpackhi_pd(t5, t6); // a1,b1,c1,d1
+  ret[2] = _mm256_unpacklo_pd(t7, t8); // a2,b2,c2,d2
+  ret[3] = _mm256_unpackhi_pd(t7, t8); // a3,b3,c3,d3
+}
+
+void FM_INLINE FM_CALL fmMat4MulVec(const _fm_vec4 *vecsa,
+                                      const _fm_vec4 *transposedMatb,_fm_vec4 ret[4]) {
+	float _m00 = fmVecDot(vecsa[0], transposedMatb[0]);
+	float _m01 = fmVecDot(vecsa[0], transposedMatb[1]);
+	float _m02 = fmVecDot(vecsa[0], transposedMatb[2]);
+	float _m03 = fmVecDot(vecsa[0], transposedMatb[3]);
+	float _m10 = fmVecDot(vecsa[1], transposedMatb[0]);
+	float _m11 = fmVecDot(vecsa[1], transposedMatb[1]);
+	float _m12 = fmVecDot(vecsa[1], transposedMatb[2]);
+	float _m13 = fmVecDot(vecsa[1], transposedMatb[3]);
+	float _m20 = fmVecDot(vecsa[2], transposedMatb[0]);
+	float _m21 = fmVecDot(vecsa[2], transposedMatb[1]);
+	float _m22 = fmVecDot(vecsa[2], transposedMatb[2]);
+	float _m23 = fmVecDot(vecsa[2], transposedMatb[3]);
+	float _m30 = fmVecDot(vecsa[3], transposedMatb[0]);
+	float _m31 = fmVecDot(vecsa[3], transposedMatb[1]);
+	float _m32 = fmVecDot(vecsa[3], transposedMatb[2]);
+	float _m33 = fmVecDot(vecsa[3], transposedMatb[3]);
+	ret[0] = fmLoadVec(_m00, _m01, _m02, _m03); 
+	ret[1] = fmLoadVec(_m10, _m11, _m12, _m13); 
+	ret[2] = fmLoadVec(_m20, _m21, _m22, _m23); 
+	ret[3] = fmLoadVec(_m30, _m31, _m32, _m33); 
+}
+
 _fm_vec4 FM_INLINE FM_CALL fmVecUnaryMinus(const _fm_vec4 &vec) {
   return _mm256_xor_ps(vec, _mm256_set1_ps(-0.0f));
 }

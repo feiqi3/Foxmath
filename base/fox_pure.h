@@ -206,6 +206,39 @@ _fm_vec4 FM_INLINE FM_CALL fmVecAbs(const _fm_vec4 &vec) {
 	return ret;
 }
 
+void FM_INLINE FM_CALL fmMat4TransposeVec(const _fm_vec4 *vecs,
+                                       _fm_vec4 *ret) {
+  for (char i = 0; i < 4; i++) {
+    for (char j = 0; j < 4; j++) {
+      ret[i].v[j] = vecs[j].v[i];
+    }
+  }
+}
+
+void FM_INLINE FM_CALL fmMat4MulVec(const _fm_vec4 *vecsa,
+                                      const _fm_vec4 *transposedMatb,_fm_vec4 ret[4]) {
+	float _m00 = fmVecDot(vecsa[0], transposedMatb[0]);
+	float _m01 = fmVecDot(vecsa[0], transposedMatb[1]);
+	float _m02 = fmVecDot(vecsa[0], transposedMatb[2]);
+	float _m03 = fmVecDot(vecsa[0], transposedMatb[3]);
+	float _m10 = fmVecDot(vecsa[1], transposedMatb[0]);
+	float _m11 = fmVecDot(vecsa[1], transposedMatb[1]);
+	float _m12 = fmVecDot(vecsa[1], transposedMatb[2]);
+	float _m13 = fmVecDot(vecsa[1], transposedMatb[3]);
+	float _m20 = fmVecDot(vecsa[2], transposedMatb[0]);
+	float _m21 = fmVecDot(vecsa[2], transposedMatb[1]);
+	float _m22 = fmVecDot(vecsa[2], transposedMatb[2]);
+	float _m23 = fmVecDot(vecsa[2], transposedMatb[3]);
+	float _m30 = fmVecDot(vecsa[3], transposedMatb[0]);
+	float _m31 = fmVecDot(vecsa[3], transposedMatb[1]);
+	float _m32 = fmVecDot(vecsa[3], transposedMatb[2]);
+	float _m33 = fmVecDot(vecsa[3], transposedMatb[3]);
+	ret[0] = fmLoadVec(_m00, _m01, _m02, _m03); 
+	ret[1] = fmLoadVec(_m10, _m11, _m12, _m13); 
+	ret[2] = fmLoadVec(_m20, _m21, _m22, _m23); 
+	ret[3] = fmLoadVec(_m30, _m31, _m32, _m33); 
+}
+
 } // namespace simd
 } // namespace fm
 #endif // FOX_PURE
