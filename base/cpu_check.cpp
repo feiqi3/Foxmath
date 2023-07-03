@@ -1,5 +1,8 @@
 #include "cpu_check.hpp"
+#if !defined (__GNUC__)
 #include "intrin.h"
+#endif
+#include "cstring"
 #include <bitset>
 #include <iostream>
 
@@ -7,7 +10,17 @@ namespace fm {
 
 
 	void CpuChecker::m_cpuid(int registers[4], int eax, int ecx = 0) {
+		//GNU does not contain the header "intrin.h"
+		//However there actually is a function called "cpuid" in "cpuid.h"
+		//But I just want to asm it.
+		#if defined (__GNUC__)
+		asm volatile ("CPUID"
+		: "=a" (registers[0]),"=b" (registers[1]), "=c" (registers[2]), "=d" (registers[3])
+		: "a" (eax), "c" (ecx)
+		);
+		#else
 		__cpuidex(registers, eax, ecx);
+		#endif
 	}
 
 	CpuChecker::CpuChecker() :Error(false) {
