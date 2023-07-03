@@ -1,7 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include <cassert>
-#include "../Header/FoxVec3.h"
+#include "../vector/vector3.h"
 
 void dotTest();
 
@@ -133,6 +133,6 @@ void hasNanTest() {
 void memAlignTest(){
 	for (int i = 0; i < 1000; ++i) {
 		auto t = FM_ALIGN_NEW(fm::vector3)(2,3,5); 
-		fm::simd::MEM_ALIGN_CHECK(t, fm::simd::FM_ALIGN_REQ);
+		fm::simd::MEM_ALIGN_CHECK(t, FM_ALIGN_REQ);
 	}
 }

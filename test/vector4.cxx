@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
-#include "../Header/FoxVec4.h"
+#include <ostream>
+#include "../vector/vector4.h"
 
 void dotTest();
 
@@ -27,7 +28,7 @@ void hasNanTest();
 void memAlignTest();
 
 int main() {
-	const int tt = fm::simd::FM_ALIGN_REQ;
+	const int tt = FM_ALIGN_REQ;
 	FMFLOAT Ttt = 3.0;
 	dotTest();
 	crossTest();
@@ -44,7 +45,7 @@ int main() {
 }
 
 bool equ(FMFLOAT a, FMFLOAT b) {
-	return abs(a - b) < 0.000001;
+	return std::abs(a - b) < 0.000001;
 }
 
 void crossTest() {
@@ -135,11 +136,11 @@ void memAlignTest() {
 	size_t totalAlloctMem = 0;
 	for (int i = 0; i < 1000; ++i) {
 		totalAlloctMem += 8 * sizeof(FMFLOAT);
-		fm::simd::fmAlignFLoat4 tmp{1,2,3,4};
+		fm::simd::fmAlignFLoat4 tmp{ 1,2,3,4 };
 		auto a = FM_ALIGN_NEW(fm::vector4)(tmp._v);
 		auto b = FM_ALIGN_NEW(fm::vector4)(tmp._v);
 		a->dot(*b);
-		fm::simd::MEM_ALIGN_CHECK(a, fm::simd::FM_ALIGN_REQ);
+		fm::simd::MEM_ALIGN_CHECK(a, FM_ALIGN_REQ);
 	}
-	std::cout<<"Memory align test has allocte "<<totalAlloctMem<<"B, test passed.\n";
+	std::cout << "Memory align test has allocte " << totalAlloctMem << "B, test passed.\n";
 }

@@ -244,11 +244,11 @@ void FM_FORCE_INLINE FM_CALL fmMat4MulVec(const _fm_vec4 *vecsa,
 }
 
 _fm_vec4 FM_FORCE_INLINE FM_CALL fmVecUnaryMinus(const _fm_vec4 &vec) {
-  return _mm256_xor_ps(vec, _mm256_set1_ps(-0.0f));
+  return _mm256_xor_pd(vec, _mm256_set1_pd(-0.0f));
 }
 
 _fm_vec4 FM_FORCE_INLINE FM_CALL fmVecAbs(const _fm_vec4 &vec) {
-  return _mm256_andnot_ps(_mm256_set1_ps(-0.0f), vec);
+  return _mm256_andnot_pd(_mm256_set1_pd(-0.0f), vec);
 }
 } // namespace simd
 } // namespace fm

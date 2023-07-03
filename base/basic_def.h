@@ -13,7 +13,7 @@
 // https://learn.microsoft.com/en-us/cpp/cpp/vectorcall?view=msvc-170
 #define FM_CALL __vectorcall
 
-#define FM_FORCE_INLINE __forceinline inline
+#define FM_FORCE_INLINE __forceinline
 
 #elif defined(__GNUC__) || defined(__clang__)
 #define FM_CALL __fastcall
@@ -107,14 +107,14 @@ namespace fm {
 
 #if defined(FOX_USE_DOUBLE)
 #define FMFLOAT double
-		#define FM_ALIGN_REQ 32
+#define FM_ALIGN_REQ 32
 #if defined(_FM_AVX2_)
 		//https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-load-pd.html
 		using _fm_vec4 = __m256d;
 #endif
 #elif defined(FOX_USE_FLOAT)
 #define FMFLOAT float
-		#define FM_ALIGN_REQ 16
+#define FM_ALIGN_REQ 16
 #if defined(_FM_SSE4_)
 		using _fm_vec4 = __m128;
 #endif
@@ -127,7 +127,7 @@ namespace fm {
 #endif
 		// Mem align check
 		void FM_FORCE_INLINE FM_CALL MEM_ALIGN_CHECK(const void* ptr, size_t alignment) {
-			assert(((long long)ptr) % alignment == 0);
+			assert(reinterpret_cast<unsigned long long>(ptr) % alignment == 0);
 		}
 
 		struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
@@ -172,7 +172,7 @@ namespace fm {
 #define FM_DELETE(x) delete x
 #else
 //Replacement new
-#define FM_ALIGN_NEW(x) new (_mm_malloc(sizeof(x), fm::simd::FM_ALIGN_REQ)) x
+#define FM_ALIGN_NEW(x) new (_mm_malloc(sizeof(x),FM_ALIGN_REQ)) x
 #define FM_DELETE(x) _mm_free(x)
 #if !defined(_MSC_VER)
 #warning                                                                       \

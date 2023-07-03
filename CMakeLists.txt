@@ -11,7 +11,7 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC" )
     #https://learn.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-170
     message("Compile flags add \'/Zc:__cplusplus\'")
-    endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
+endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 
 option(FOX_SSE_SUPPORT "Enable sse support for programe." OFF)
 option(FOX_AVX_SUPPORT "Enable avx/sse support for programe." OFF)
@@ -27,13 +27,14 @@ add_definitions(-DFM_DEBUG)
 
     if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 
-    set(CMAKE_CXX_FLAGS "-g -fomit-frame-pointer ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-v -g -fomit-frame-pointer ${CMAKE_CXX_FLAGS}")
+    message("Compile flags add \'-v\'")
     message("Compile flags add \'-g\'")
     message("Compile flags add \'-fomit-frame-pointer\'")
 
     else()
-    set(CMAKE_CXX_FLAGS "/DEBUG:FULL /Oy /Zi ${CMAKE_CXX_FLAGS}")
-    message("Compile flags add \'/DEBUG:FULL\'")
+    set(CMAKE_CXX_FLAGS "/DEBUG /Oy /Zi ${CMAKE_CXX_FLAGS}")
+    message("Compile flags add \'/DEBUG\'")
     message("Compile flags add \'/Oy\'")
     endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 
