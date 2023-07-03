@@ -8,7 +8,7 @@
 namespace fm {
 
 namespace simd {
-_fm_vec4 FM_INLINE FM_CALL fmLoadVecP(const FMFLOAT *pd) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmLoadVecP(const FMFLOAT *pd) {
   // AVX Intinsics for pd need 32 mem align
 #if defined(FM_DEBUG)
   MEM_ALIGN_CHECK(pd, FM_ALIGN_REQ);
@@ -16,7 +16,7 @@ _fm_vec4 FM_INLINE FM_CALL fmLoadVecP(const FMFLOAT *pd) {
   return _mm256_load_pd(pd);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmLoadVec(FMFLOAT a, FMFLOAT b, FMFLOAT c,
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmLoadVec(FMFLOAT a, FMFLOAT b, FMFLOAT c,
                                      FMFLOAT d) {
   // In memory, its layout is like :
   //  | a | b | c | d |
@@ -24,11 +24,11 @@ _fm_vec4 FM_INLINE FM_CALL fmLoadVec(FMFLOAT a, FMFLOAT b, FMFLOAT c,
   return _mm256_set_pd(d, c, b, a);
 }
 
-void FM_INLINE FM_CALL fmStoreVec(fmAlignFLoat4 &f4, const _fm_vec4 &vec) {
+void FM_FORCE_INLINE FM_CALL fmStoreVec(fmAlignFLoat4 &f4, const _fm_vec4 &vec) {
   _mm256_store_pd(f4._v, vec);
 }
 
-FMFLOAT FM_INLINE FM_CALL fmGetElem(const _fm_vec4 &vec, int pos) {
+FMFLOAT FM_FORCE_INLINE FM_CALL fmGetElem(const _fm_vec4 &vec, int pos) {
 #if defined(FM_DEBUG)
   assert(pos >= 0 && pos <= 3);
 #endif
@@ -44,53 +44,53 @@ FMFLOAT FM_INLINE FM_CALL fmGetElem(const _fm_vec4 &vec, int pos) {
 // https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-broadcast-sd.html
 // Loads scalar double-precision floating-point values from the specified
 // address a, and broadcasts it to all four elements in the destination vector.
-_fm_vec4 FM_INLINE FM_CALL fmSpreadVec(FMFLOAT t) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmSpreadVec(FMFLOAT t) {
   return _mm256_broadcast_sd(&t);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecAdd(const _fm_vec4 &veca,
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecAdd(const _fm_vec4 &veca,
                                     const _fm_vec4 &vecb) {
   return _mm256_add_pd(veca, vecb);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecScale(const _fm_vec4 &veca, FMFLOAT factor) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecScale(const _fm_vec4 &veca, FMFLOAT factor) {
   return _mm256_mul_pd(veca, fmSpreadVec(factor));
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecMul(_fm_vec4 &veca, _fm_vec4 &vecb) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecMul(const _fm_vec4 &veca,const _fm_vec4 &vecb) {
   alignas(32) auto ret = _mm256_mul_pd(veca, vecb);
   return ret;
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecSub(const _fm_vec4 &veca,
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecSub(const _fm_vec4 &veca,
                                     const _fm_vec4 &vecb) {
   return _mm256_sub_pd(veca, vecb);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecDiv(const _fm_vec4 &veca,
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecDiv(const _fm_vec4 &veca,
                                     const _fm_vec4 &vecb) {
   return _mm256_div_pd(veca, vecb);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecCeil(const _fm_vec4 &vec) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecCeil(const _fm_vec4 &vec) {
   return _mm256_ceil_pd(vec);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecFloor(const _fm_vec4 &vec) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecFloor(const _fm_vec4 &vec) {
   return _mm256_floor_pd(vec);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecMaxOfEachElem(const _fm_vec4 &veca,
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecMaxOfEachElem(const _fm_vec4 &veca,
                                               const _fm_vec4 &vecb) {
   return _mm256_max_pd(veca, vecb);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecMinOfEachElem(const _fm_vec4 &veca,
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecMinOfEachElem(const _fm_vec4 &veca,
                                               const _fm_vec4 &vecb) {
   return _mm256_min_pd(veca, vecb);
 }
 
-FMFLOAT FM_INLINE FM_CALL fmMaxElemOfVec(const _fm_vec4 &vec) {
+FMFLOAT FM_FORCE_INLINE FM_CALL fmMaxElemOfVec(const _fm_vec4 &vec) {
   _fm_vec4 temp = vec;
   temp = _mm256_permute4x64_pd(temp, _FM_SHUFFLE(3, 2, 1, 0));
   /*
@@ -110,7 +110,7 @@ FMFLOAT FM_INLINE FM_CALL fmMaxElemOfVec(const _fm_vec4 &vec) {
   return fmGetElem(temp, 0);
 }
 
-FMFLOAT FM_INLINE FM_CALL fmMinElemOfVec(const _fm_vec4 &vec) {
+FMFLOAT FM_FORCE_INLINE FM_CALL fmMinElemOfVec(const _fm_vec4 &vec) {
   _fm_vec4 temp = vec;
   temp = _mm256_permute4x64_pd(temp, _FM_SHUFFLE(3, 2, 1, 0));
   /*
@@ -130,7 +130,7 @@ FMFLOAT FM_INLINE FM_CALL fmMinElemOfVec(const _fm_vec4 &vec) {
   return fmGetElem(temp, 0);
 }
 
-FMFLOAT FM_INLINE FM_CALL fmVecDot(_fm_vec4 &veca, _fm_vec4 &vecb) {
+FMFLOAT FM_FORCE_INLINE FM_CALL fmVecDot(const _fm_vec4 &veca, const _fm_vec4 &vecb) {
   _fm_vec4 ab = fmVecMul(veca, vecb);
 
   // veca(a,b,c,d) vecb(e,f,g,h)
@@ -141,12 +141,12 @@ FMFLOAT FM_INLINE FM_CALL fmVecDot(_fm_vec4 &veca, _fm_vec4 &vecb) {
   return fmGetElem(fmVecAdd(shuffle, temp), 0);
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecSqrt(const _fm_vec4 &vec) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecSqrt(const _fm_vec4 &vec) {
   return _mm256_sqrt_pd(vec);
 }
 
 // Two vec3 cross product
-_fm_vec4 FM_INLINE FM_CALL fmVec3Cross(const _fm_vec4 &veca,
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVec3Cross(const _fm_vec4 &veca,
                                        const _fm_vec4 &vecb) {
   /*
           //Naive version
@@ -165,7 +165,7 @@ _fm_vec4 FM_INLINE FM_CALL fmVec3Cross(const _fm_vec4 &veca,
   return _mm256_permute4x64_pd(c, _FM_SHUFFLE(1, 2, 0, 3));
 }
 
-FMFLOAT FM_INLINE FM_CALL fmVec2Cross(const _fm_vec4 &veca,
+FMFLOAT FM_FORCE_INLINE FM_CALL fmVec2Cross(const _fm_vec4 &veca,
                                       const _fm_vec4 &vecb) {
   _fm_vec4 bYX = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(1, 0, 2, 3));
   _fm_vec4 temp = _mm256_mul_pd(bYX, veca);
@@ -173,14 +173,14 @@ FMFLOAT FM_INLINE FM_CALL fmVec2Cross(const _fm_vec4 &veca,
   return fmGetElem(hSub, 0);
 }
 
-FMFLOAT FM_INLINE FM_CALL fmVecSum(const _fm_vec4 &vec) {
+FMFLOAT FM_FORCE_INLINE FM_CALL fmVecSum(const _fm_vec4 &vec) {
   _fm_vec4 temp = _mm256_permute4x64_pd(vec, _FM_SHUFFLE(3, 2, 1, 0));
   _fm_vec4 sum = fmVecAdd(temp, vec);
   temp = _mm256_hadd_pd(sum, sum);
   return fmGetElem(temp, 0);
 }
 
-void FM_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4 *vecs,
+void FM_FORCE_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4 *vecs,
                                        fmAlignFLoat4 *ret) {
   _fm_vec4 v0, v1, v2, v3;
   v0 = fmLoadVecP(vecs[0]._v);
@@ -202,7 +202,7 @@ void FM_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4 *vecs,
   _mm256_storeu_pd(ret[3]._v, _mm256_unpackhi_pd(t7, t8)); // a3,b3,c3,d3
 }
 
-void FM_INLINE FM_CALL fmMat4TransposeVec(const _fm_vec4 *vecs,
+void FM_FORCE_INLINE FM_CALL fmMat4TransposeVec(const _fm_vec4 *vecs,
                                        _fm_vec4 *ret) {
 
   __m256d t1 = _mm256_permute4x64_pd(vecs[0], 0b01001110);      // a2,a3,a0,a1
@@ -219,35 +219,35 @@ void FM_INLINE FM_CALL fmMat4TransposeVec(const _fm_vec4 *vecs,
   ret[3] = _mm256_unpackhi_pd(t7, t8); // a3,b3,c3,d3
 }
 
-void FM_INLINE FM_CALL fmMat4MulVec(const _fm_vec4 *vecsa,
+void FM_FORCE_INLINE FM_CALL fmMat4MulVec(const _fm_vec4 *vecsa,
                                       const _fm_vec4 *transposedMatb,_fm_vec4 ret[4]) {
-	float _m00 = fmVecDot(vecsa[0], transposedMatb[0]);
-	float _m01 = fmVecDot(vecsa[0], transposedMatb[1]);
-	float _m02 = fmVecDot(vecsa[0], transposedMatb[2]);
-	float _m03 = fmVecDot(vecsa[0], transposedMatb[3]);
-	float _m10 = fmVecDot(vecsa[1], transposedMatb[0]);
-	float _m11 = fmVecDot(vecsa[1], transposedMatb[1]);
-	float _m12 = fmVecDot(vecsa[1], transposedMatb[2]);
-	float _m13 = fmVecDot(vecsa[1], transposedMatb[3]);
-	float _m20 = fmVecDot(vecsa[2], transposedMatb[0]);
-	float _m21 = fmVecDot(vecsa[2], transposedMatb[1]);
-	float _m22 = fmVecDot(vecsa[2], transposedMatb[2]);
-	float _m23 = fmVecDot(vecsa[2], transposedMatb[3]);
-	float _m30 = fmVecDot(vecsa[3], transposedMatb[0]);
-	float _m31 = fmVecDot(vecsa[3], transposedMatb[1]);
-	float _m32 = fmVecDot(vecsa[3], transposedMatb[2]);
-	float _m33 = fmVecDot(vecsa[3], transposedMatb[3]);
+	FMFLOAT _m00 = fmVecDot(vecsa[0], transposedMatb[0]);
+	FMFLOAT _m01 = fmVecDot(vecsa[0], transposedMatb[1]);
+	FMFLOAT _m02 = fmVecDot(vecsa[0], transposedMatb[2]);
+	FMFLOAT _m03 = fmVecDot(vecsa[0], transposedMatb[3]);
+	FMFLOAT _m10 = fmVecDot(vecsa[1], transposedMatb[0]);
+	FMFLOAT _m11 = fmVecDot(vecsa[1], transposedMatb[1]);
+	FMFLOAT _m12 = fmVecDot(vecsa[1], transposedMatb[2]);
+	FMFLOAT _m13 = fmVecDot(vecsa[1], transposedMatb[3]);
+	FMFLOAT _m20 = fmVecDot(vecsa[2], transposedMatb[0]);
+	FMFLOAT _m21 = fmVecDot(vecsa[2], transposedMatb[1]);
+	FMFLOAT _m22 = fmVecDot(vecsa[2], transposedMatb[2]);
+	FMFLOAT _m23 = fmVecDot(vecsa[2], transposedMatb[3]);
+	FMFLOAT _m30 = fmVecDot(vecsa[3], transposedMatb[0]);
+	FMFLOAT _m31 = fmVecDot(vecsa[3], transposedMatb[1]);
+	FMFLOAT _m32 = fmVecDot(vecsa[3], transposedMatb[2]);
+	FMFLOAT _m33 = fmVecDot(vecsa[3], transposedMatb[3]);
 	ret[0] = fmLoadVec(_m00, _m01, _m02, _m03); 
 	ret[1] = fmLoadVec(_m10, _m11, _m12, _m13); 
 	ret[2] = fmLoadVec(_m20, _m21, _m22, _m23); 
 	ret[3] = fmLoadVec(_m30, _m31, _m32, _m33); 
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecUnaryMinus(const _fm_vec4 &vec) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecUnaryMinus(const _fm_vec4 &vec) {
   return _mm256_xor_ps(vec, _mm256_set1_ps(-0.0f));
 }
 
-_fm_vec4 FM_INLINE FM_CALL fmVecAbs(const _fm_vec4 &vec) {
+_fm_vec4 FM_FORCE_INLINE FM_CALL fmVecAbs(const _fm_vec4 &vec) {
   return _mm256_andnot_ps(_mm256_set1_ps(-0.0f), vec);
 }
 } // namespace simd

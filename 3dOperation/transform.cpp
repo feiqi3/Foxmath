@@ -4,14 +4,13 @@
 
 #include "../matrix/matrix4x4.h"
 #include <cmath>
-#include <corecrt_math.h>
 #include <cstdlib>
 #include <limits>
 
 static constexpr FMFLOAT BIAS = 30 * std::numeric_limits<FMFLOAT>::min();
 
 template <typename VecType>
-static bool FM_INLINE isNormalized(const VecType &t) FMTHROW {
+static bool FM_FORCE_INLINE isNormalized(const VecType &t) FMTHROW {
   return std::abs(t.length() - 1) < BIAS;
 }
 

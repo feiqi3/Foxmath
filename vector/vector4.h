@@ -24,13 +24,12 @@ public:
   friend class vector3;
 
   vector4(const vector3 &in) FMTHROW;
-  FMFLOAT &FM_CALL operator[](size_t t) FMTHROW;
+  FMFLOAT&FM_CALL operator[](size_t t) FMTHROW;
 
-   FMFLOAT &FM_CALL x() FMTHROW;
-   FMFLOAT &FM_CALL y() FMTHROW;
-   FMFLOAT &FM_CALL z() FMTHROW;
-   FMFLOAT &FM_CALL w() FMTHROW;
-
+  FMFLOAT &FM_CALL x() FMTHROW;
+  FMFLOAT &FM_CALL y() FMTHROW;
+  FMFLOAT &FM_CALL z() FMTHROW;
+  FMFLOAT &FM_CALL w() FMTHROW;
 
   const FMFLOAT &FM_CALL operator[](size_t t) const FMTHROW;
 
