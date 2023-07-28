@@ -72,7 +72,7 @@ namespace fm {
 	const vector4 FM_CALL vector4::operator-() const FMTHROW {
 		auto ret = fm::simd::fmLoadVecP(__data._v);
 		ret = simd::fmVecUnaryMinus(ret);
-		vector3 retVec;
+		vector4 retVec;
 		fmStoreVec(retVec.__data, ret);
 		return retVec;
 	}
