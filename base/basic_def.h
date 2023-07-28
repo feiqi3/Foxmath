@@ -107,6 +107,10 @@ namespace fm {
 
 #if defined(FOX_USE_DOUBLE)
 #define FMFLOAT double
+typedef union{
+	FMFLOAT __fp;
+	long long __int;
+} __FM_NUM;
 #define FM_ALIGN_REQ 32
 #if defined(_FM_AVX2_)
 		//https://www.intel.com/content/www/us/en/docs/cpp-compiler/developer-guide-reference/2021-8/mm256-load-pd.html
@@ -114,6 +118,10 @@ namespace fm {
 #endif
 #elif defined(FOX_USE_FLOAT)
 #define FMFLOAT float
+typedef union{
+	FMFLOAT __fp;
+	long __int;
+} __FM_NUM;
 #define FM_ALIGN_REQ 16
 #if defined(_FM_SSE4_)
 		using _fm_vec4 = __m128;
