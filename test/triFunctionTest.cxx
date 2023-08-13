@@ -13,6 +13,7 @@
 #include <limits>
 #include <ostream>
 #include <ratio>
+#include <stdint.h>
 #include <string>
 #include <type_traits>
 
@@ -1604,20 +1605,25 @@ void precisionTest(std::function<double(double)> funca,
   long double totalCount = (max - min) / step;
   long double meanError = 0;
   long double maxError = 0;
+  double pos = 0;
   for (long double t = min; t < max; t += step) {
     long double tmp = std::abs(funca(t) - funcB(t));
     meanError += tmp;
-    maxError = std::max(tmp, maxError);
+    if(tmp > maxError){
+      maxError = tmp;
+      pos =t;
+    }
   }
   std::cout << funcbname << " Error test:\n"
             << "Mean Error: " << meanError / totalCount
-            << "\nMax Error bounding: " << maxError << "\n\n";
+            << "\nMax Error bounding: " << maxError <<std::fixed<< " at "<<pos<<"\n\n";
 }
 
 
 
 int main() {
   auto stdTan = [](double x) { return std::tan(x); };
+  auto stdArctan = [](double x){return std::atan(x);};
   auto stdCosine = [](double x) { return std::cos(x); };
   auto stdSine = [](double x) { return std::sin(x); };
   std::cout << std::fixed;
@@ -1639,4 +1645,10 @@ int main() {
   Timebenchmark(stdTan, "std::tan", premuter);
   Timebenchmark(fm::Tan<double>, "fm::Tan", premuter);
   precisionTest(stdTan, fm::Tan<double>, "fm::Tan", -3.14159, 3.14159, 0.00001);
-}
+
+  std::cout << "<========================>\n\n";
+  Timebenchmark(stdArctan, "std::atan", premuter);
+  Timebenchmark(fm::Arctan<double>, "fm::Arctan", premuter);
+  precisionTest(stdArctan, fm::Arctan<double>, "fm::Arctan", -3.14159, 3.14159, 0.0001);
+
+  }
