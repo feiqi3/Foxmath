@@ -68,6 +68,21 @@ FM_CALL FM_FORCE_INLINE T Tan(T ty) FMTHROW {
   return __do_Tan(static_cast<double>(ty));
 }
 
+FM_CALL double __do_Cot(double in)FMTHROW;
+template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
+                                              bool>::type = true>
+FM_CALL FM_FORCE_INLINE T Cot(T ty) FMTHROW {
+  return __do_Cot(static_cast<double>(ty));
+}
+
+FM_CALL double __do_Arctan(double in)FMTHROW;
+FM_CALL double __do_Cot(double in)FMTHROW;
+template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
+                                              bool>::type = true>
+FM_CALL FM_FORCE_INLINE T Arctan(T ty) FMTHROW {
+  return __do_Arctan(static_cast<double>(ty));
+}
+
 } // namespace fm
 
 #endif
