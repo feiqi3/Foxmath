@@ -44,42 +44,42 @@ vector3 FM_CALL abs(const vector3 &vec) FMTHROW;
 
 vector4 FM_CALL abs(const vector4 &vec) FMTHROW;
 
-FM_CALL double __do_Sin(double x) FMTHROW;
+double FM_CALL __do_Sin(double x) FMTHROW;
 
 template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
                                               bool>::type = true>
-FM_CALL FM_FORCE_INLINE T Sin(T ty) FMTHROW {
+FM_FORCE_INLINE T FM_CALL Sin(T ty) FMTHROW {
   return __do_Sin(static_cast<double>(ty));
 }
 
-FM_CALL double __do_Cos(double x) FMTHROW;
+FM_FORCE_INLINE double FM_CALL __do_Cos(double x) FMTHROW;
 
 template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
                                               bool>::type = true>
-FM_CALL FM_FORCE_INLINE T Cos(T ty) FMTHROW {
+FM_FORCE_INLINE T FM_CALL Cos(T ty) FMTHROW {
   return __do_Cos(static_cast<double>(ty));
 }
 
-FM_CALL double __do_Tan(double x) FMTHROW;
+double FM_CALL __do_Tan(double x) FMTHROW;
 
 template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
                                               bool>::type = true>
-FM_CALL FM_FORCE_INLINE T Tan(T ty) FMTHROW {
+FM_FORCE_INLINE T FM_CALL Tan(T ty) FMTHROW {
   return __do_Tan(static_cast<double>(ty));
 }
 
-FM_CALL double __do_Cot(double in)FMTHROW;
+double FM_CALL __do_Cot(double in) FMTHROW;
 template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
                                               bool>::type = true>
-FM_CALL FM_FORCE_INLINE T Cot(T ty) FMTHROW {
+FM_FORCE_INLINE T FM_CALL Cot(T ty) FMTHROW {
   return __do_Cot(static_cast<double>(ty));
 }
 
-FM_CALL double __do_Arctan(double in)FMTHROW;
-FM_CALL double __do_Cot(double in)FMTHROW;
+double FM_CALL __do_Arctan(double in) FMTHROW;
+double FM_CALL __do_Cot(double in) FMTHROW;
 template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
                                               bool>::type = true>
-FM_CALL FM_FORCE_INLINE T Arctan(T ty) FMTHROW {
+FM_FORCE_INLINE T FM_CALL Arctan(T ty) FMTHROW {
   return __do_Arctan(static_cast<double>(ty));
 }
 

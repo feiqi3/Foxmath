@@ -729,7 +729,7 @@ constexpr double CosTop3Premute[360] = {1.00000000000000000000000000000000000,
 
 namespace fm {
 
-FM_CALL double __do_Sin(double in) FMTHROW {
+double FM_CALL __do_Sin(double in) FMTHROW {
   double deg = fm::radToDeg(std::abs(in));
   int degree = deg;
   double rest = fm::degToRad(deg - degree);
@@ -749,7 +749,7 @@ FM_CALL double __do_Sin(double in) FMTHROW {
   return in < 0 ? -ret : ret;
 }
 
-FM_CALL double __do_Cos(double in) FMTHROW {
+double FM_CALL __do_Cos(double in) FMTHROW {
   double deg = fm::radToDeg(std::abs(in));
   int degree = deg;
   double rest = fm::degToRad(deg - degree);
@@ -769,17 +769,17 @@ FM_CALL double __do_Cos(double in) FMTHROW {
   return ret;
 }
 
-FM_CALL double __do_Tan(double in) FMTHROW {
+double FM_CALL __do_Tan(double in) FMTHROW {
   return __do_Sin(in) / __do_Cos(in);
 }
 
-FM_CALL double __do_Cot(double in) FMTHROW {
+double FM_CALL __do_Cot(double in) FMTHROW {
   return __do_Cos(in) / __do_Sin(in);
 }
 
-static FM_CALL double __arcTan1DivA(double a) FMTHROW;
+static double FM_CALL __arcTan1DivA(double a) FMTHROW;
 
-FM_CALL double __do_Arctan(double in) FMTHROW {
+double FM_CALL __do_Arctan(double in) FMTHROW {
   double ain = fm::abs(in) + 0.0000001;
   if (ain < 1) {
     double t = 1. / ain;
@@ -791,7 +791,7 @@ FM_CALL double __do_Arctan(double in) FMTHROW {
   }
 }
 
-static FM_CALL double __arcTan1DivA(double a) FMTHROW {
+static double FM_CALL __arcTan1DivA(double a) FMTHROW {
   static const fm::simd::fmAlignFLoat4 aa1F{15159, 147455, 345345, 225225};
   static const fm::simd::fmAlignFLoat4 bb1F{1260 * 35, 6930 * 35, 12012 * 35,
                                             6435 * 35};
