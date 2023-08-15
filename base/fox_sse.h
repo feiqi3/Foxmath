@@ -159,7 +159,7 @@ _fm_vec4 FM_FORCE_INLINE FM_CALL fmVec3Cross(const _fm_vec4 &veca,
 
 FMFLOAT FM_FORCE_INLINE FM_CALL fmVec2Cross(const _fm_vec4 &veca,
                                       const _fm_vec4 &vecb) {
-  _fm_vec4 bYX = _mm_shuffle_ps(veca, veca, _FM_SHUFFLE(1, 0, 2, 3));
+  _fm_vec4 bYX = _mm_shuffle_ps(vecb, vecb, _FM_SHUFFLE(1, 0, 2, 3));
   _fm_vec4 temp = _mm_mul_ps(bYX, veca);
   _fm_vec4 hSub = _mm_hsub_ps(temp, temp);
   return fmGetElem(hSub, 0);

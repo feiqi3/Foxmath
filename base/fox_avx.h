@@ -159,7 +159,7 @@ _fm_vec4 FM_FORCE_INLINE FM_CALL fmVec3Cross(const _fm_vec4 &veca,
           */
   // Faster version, one shuffle less
   _fm_vec4 aYZX = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(1, 2, 0, 3));
-  _fm_vec4 bYZX = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(1, 2, 0, 3));
+  _fm_vec4 bYZX = _mm256_permute4x64_pd(vecb, _FM_SHUFFLE(1, 2, 0, 3));
   _fm_vec4 c =
       _mm256_sub_pd(_mm256_mul_pd(veca, bYZX), _mm256_mul_pd(aYZX, vecb));
   return _mm256_permute4x64_pd(c, _FM_SHUFFLE(1, 2, 0, 3));
@@ -167,7 +167,7 @@ _fm_vec4 FM_FORCE_INLINE FM_CALL fmVec3Cross(const _fm_vec4 &veca,
 
 FMFLOAT FM_FORCE_INLINE FM_CALL fmVec2Cross(const _fm_vec4 &veca,
                                       const _fm_vec4 &vecb) {
-  _fm_vec4 bYX = _mm256_permute4x64_pd(veca, _FM_SHUFFLE(1, 0, 2, 3));
+  _fm_vec4 bYX = _mm256_permute4x64_pd(vecb, _FM_SHUFFLE(1, 0, 2, 3));
   _fm_vec4 temp = _mm256_mul_pd(bYX, veca);
   _fm_vec4 hSub = _mm256_hsub_pd(temp, temp);
   return fmGetElem(hSub, 0);
