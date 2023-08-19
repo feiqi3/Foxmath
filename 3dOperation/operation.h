@@ -89,6 +89,19 @@ template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
 FM_FORCE_INLINE T FM_CALL Log(T ty) FMTHROW {
   return __do_Ln(ty);
 }
+double FM_CALL __do_Log2(double in) FMTHROW;
+template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
+                                              bool>::type = true>
+FM_FORCE_INLINE T FM_CALL Log2(T ty) FMTHROW {
+  return __do_Log2(ty);
+}
+
+double FM_CALL __do_Log10(double in) FMTHROW;
+template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
+                                              bool>::type = true>
+FM_FORCE_INLINE T FM_CALL Log10(T ty) FMTHROW {
+  return __do_Log10(ty);
+}
 } // namespace fm
 
 #endif
