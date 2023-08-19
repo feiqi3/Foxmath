@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <string>
 #include <type_traits>
+#include "./testHeader.hpp"
 
 
 long double SinPremuteTable[] = {0.0000000000000000000000000000000000000000,
@@ -1545,6 +1546,7 @@ long double mSin(float x) {
     x = PI - x;
   }
 
+
   long double pos = x * invDelta;
   auto flr = floor(pos);
   int iflr = flr;
@@ -1565,60 +1567,6 @@ long double mSin(float x) {
 #include <vector>
 
 #define R_NUM 5000000
-std::vector<FMFLOAT> preMute() {
-
-  std::vector<FMFLOAT> ret;
-  std::random_device seed;      // 硬件生成随机数种子
-  std::ranlux48 engine(seed()); // 利用种子生成随机数引擎
-  std::uniform_real_distribution<FMFLOAT> dist(-1000, 1000);
-  for (long long i = 0; i < R_NUM; ++i) {
-    ret.push_back(dist(engine));
-  }
-  return ret;
-}
-
-#include <functional>
-
-void Timebenchmark(std::function<double(double)> funca,
-                   const std::string &funcaname, std::vector<double> &premute) {
-  std::cout.precision(17);
-  std::cout << std::fixed;
-  auto beg = std::chrono::steady_clock::now();
-  volatile double tmp;
-  for (auto t : premute) {
-    tmp = funca(t);
-  }
-  auto end = std::chrono::steady_clock::now();
-
-  std::cout << funcaname << " costs ==> "
-            << std::chrono::duration_cast<std::chrono::milliseconds>(end - beg)
-                       .count() /
-                   1000.
-            << "s\n\n";
-}
-
-void precisionTest(std::function<double(double)> funca,
-                   std::function<double(double)> funcB,
-                   const std::string &funcbname, double min, double max,
-                   double step) {
-  std::cout.precision(17);
-  long double totalCount = (max - min) / step;
-  long double meanError = 0;
-  long double maxError = 0;
-  double pos = 0;
-  for (long double t = min; t < max; t += step) {
-    long double tmp = std::abs(funca(t) - funcB(t));
-    meanError += tmp;
-    if(tmp > maxError){
-      maxError = tmp;
-      pos =t;
-    }
-  }
-  std::cout << funcbname << " Error test:\n"
-            << "Mean Error: " << meanError / totalCount
-            << "\nMax Error bounding: " << maxError <<std::fixed<< " at "<<pos<<"\n\n";
-}
-
 
 
 int main() {
@@ -1628,7 +1576,7 @@ int main() {
   auto stdSine = [](double x) { return std::sin(x); };
   std::cout << std::fixed;
   std::cout.precision(30);
-  auto premuter = preMute();
+  auto premuter = preMute(R_NUM,-1000,1000);
 
   Timebenchmark(stdSine, "std::sin", premuter);
   Timebenchmark(mSin, "mSin", premuter);
