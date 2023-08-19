@@ -52,7 +52,7 @@ FM_FORCE_INLINE T FM_CALL Sin(T ty) FMTHROW {
   return __do_Sin(static_cast<double>(ty));
 }
 
-FM_FORCE_INLINE double FM_CALL __do_Cos(double x) FMTHROW;
+double FM_CALL __do_Cos(double x) FMTHROW;
 
 template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
                                               bool>::type = true>
@@ -83,6 +83,12 @@ FM_FORCE_INLINE T FM_CALL Arctan(T ty) FMTHROW {
   return __do_Arctan(static_cast<double>(ty));
 }
 
+double FM_CALL __do_Ln(double in) FMTHROW;
+template <typename T, typename std::enable_if<std::is_floating_point<T>::value,
+                                              bool>::type = true>
+FM_FORCE_INLINE T FM_CALL Log(T ty) FMTHROW {
+  return __do_Ln(ty);
+}
 } // namespace fm
 
 #endif
