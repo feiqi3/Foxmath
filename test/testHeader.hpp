@@ -38,6 +38,9 @@ inline void precisionTest(std::function<double(double)> funca,
   double pos = 0;
   for (long double t = min; t < max; t += step) {
     long double tmp = std::abs(funca(t) - funcB(t));
+    if(std::isnan(tmp)){
+      volatile int k  = funcB(t);
+    }
     meanError += tmp;
     if(tmp > maxError){
       maxError = tmp;
