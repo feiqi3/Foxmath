@@ -232,7 +232,7 @@ double FM_CALL __do_Ln(double in) FMTHROW {
   if (in < MAX_DEN) {
     return -INFINITY;
   }
-  static simd::fmAlignFLoat4 tylorCoef[4]{-0.5, 1. / 3, -0.25, 0.2};
+  static const simd::fmAlignFLoat4 tylorCoef[4]{-0.5, 1. / 3, -0.25, 0.2};
   double rem;
   auto exp = mfrexp(in, &rem);
   int s = rem * 100;
