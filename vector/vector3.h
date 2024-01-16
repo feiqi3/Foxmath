@@ -1,9 +1,10 @@
 #ifndef VECTOR3_H_
 #define VECTOR3_H_
 #include "../base/basic_def.h"
+#include "../base/vecBase.hpp"
 #include <ostream>
 namespace fm {
-	class vector3 {
+	class vector3 : public VecBase{
 	public:
 		vector3()FMTHROW;
 
@@ -61,7 +62,6 @@ namespace fm {
 		vector3(const simd::fmAlignFLoat4& in);
 	private:
 		fm::simd::fmAlignFLoat4 __data;
-
 	};
 
 	const vector3  FM_CALL operator*(const vector3& a, FMFLOAT b) FMTHROW;
@@ -72,7 +72,7 @@ namespace fm {
 
 	std::ostream& operator<<(std::ostream& out, const vector3& s);
 
-	bool  FM_CALL hasNan(const vector3& in) FMTHROW;
+	bool FM_CALL hasNan(const vector3& in) FMTHROW;
 
 }
 #endif

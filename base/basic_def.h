@@ -4,7 +4,7 @@
 #include <cassert>
 #include <cstddef>
 #include <stdint.h>
-
+#include<malloc.h>
 
 
 // Only works under x86
@@ -137,7 +137,7 @@ typedef union{
 		void FM_FORCE_INLINE FM_CALL MEM_ALIGN_CHECK(const void* ptr, size_t alignment) {
 			assert(reinterpret_cast<unsigned long long>(ptr) % alignment == 0);
 		}
-
+	
 		struct alignas(FM_ALIGN_REQ) fmAlignFLoat4 {
 			FMFLOAT _v[4];
 			FMFLOAT& operator[](size_t t) { return _v[t]; }
@@ -174,23 +174,10 @@ typedef union{
 // It is confusing and is a total chaos.
 // So I leave a Macro and a long comment here
 // To make EVERYTHING CLEAR
-#if __cplusplus >= 201703L
-//TODO: make FM_NEW can call construction function
-#define FM_ALIGN_NEW(x) new x
-#define FM_DELETE(x) delete x
-#else
-//Replacement new
+
 #define FM_ALIGN_NEW(x) new (_mm_malloc(sizeof(x),FM_ALIGN_REQ)) x
+#define FM_ALIGN_MALLOC(x)  (_mm_malloc(x,FM_ALIGN_REQ))
 #define FM_DELETE(x) _mm_free(x)
-#if !defined(_MSC_VER)
-#warning                                                                       \
-"Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat"
-#else
-#pragma throw_warning(                                                         \
-    10002,                                                                     \
-    "Under std:c++17, operator new cannot assure the alignment of struct, using FM_ALIGN_NEW(x) instead when allocating memory for vector/mat")
-#endif
-#endif
 
 
 #endif // BASIC_DEF_H

@@ -30,9 +30,6 @@ namespace fm {
 		void m_cpuid(int[4], int, int);
 		void setHinter(const char* set, bool isSupported);
 		std::string cpuVendor;
-
-
-
 	};
 
 }

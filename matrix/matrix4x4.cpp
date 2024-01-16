@@ -90,17 +90,6 @@ static mat4 mat4Ones({1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1});
 
 mat4 FM_CALL mat4::identity() { return mat4Ones; }
 
-mat4::mat4(const std::initializer_list<FMFLOAT> &in) {
-#if defined(FM_DEBUG)
-  assert(in.size() == 16);
-#endif
-  auto lp = in.begin();
-  for (char i = 0; i < 3; i++) {
-    for (char j = 0; j < 3; j++, ++lp) {
-      __data[i][j] = *lp;
-    }
-  }
-}
 std::ostream &operator<<(std::ostream &out, const mat4 &s) {
   out << s.__data[0] << "\n"
       << s.__data[1] << "\n"

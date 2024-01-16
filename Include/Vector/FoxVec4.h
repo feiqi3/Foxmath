@@ -1,12 +1,8 @@
 #ifndef VECTOR4_H_
 #define VECTOR4_H_
 
-#include "../base/basic_def.h"
-#include <cmath>
-#include <cstring>
-#include <initializer_list>
+#include "../FoxDef.h"
 #include <ostream>
-#include "../base/vecBase.hpp"
 
 namespace fm {
 

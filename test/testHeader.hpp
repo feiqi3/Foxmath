@@ -1,10 +1,14 @@
 #ifndef TESTHEADER_HPP
 #define TESTHEADER_HPP
 
-#include "base/basic_def.h"
-#include"base/fox_avx.h"
-#include"base/fox_sse.h"
-#include"base/fox_pure.h"
+#include "Math/Constants.h"
+#include "Math/Functions.h"
+#include "Math/Transform.h"
+#include "Matrix/FoxMat4x4.h"
+#include "Vector/FoxVec3.h"
+#include "Vector/FoxVec4.h"
+#include "FoxDef.h"
+#include <string>
 #include <functional>
 #include <chrono>
 #include <iostream>

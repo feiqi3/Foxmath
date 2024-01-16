@@ -1,8 +1,4 @@
 #include "./testHeader.hpp"
-#include "3dOperation/constants.h"
-#include "3dOperation/operation.h"
-#include "test/testHeader.hpp"
-#include <cmath>
 #include <functional>
 #include <ios>
 #include <iostream>

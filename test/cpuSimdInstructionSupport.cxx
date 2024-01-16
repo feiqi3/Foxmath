@@ -1,4 +1,4 @@
-#include "../base/cpu_check.hpp"
+#include "FoxCpuCheck.hpp"
 
 //Use 'ctest --verbose' to see outcome 
 int main() {

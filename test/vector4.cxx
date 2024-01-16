@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include <ostream>
-#include "../vector/vector4.h"
+#include "./testHeader.hpp"
 
 void dotTest();
 
@@ -137,10 +137,10 @@ void memAlignTest() {
 	for (int i = 0; i < 1000; ++i) {
 		totalAlloctMem += 8 * sizeof(FMFLOAT);
 		fm::simd::fmAlignFLoat4 tmp{ 1,2,3,4 };
-		auto a = FM_ALIGN_NEW(fm::vector4)(tmp._v);
-		auto b = FM_ALIGN_NEW(fm::vector4)(tmp._v);
+		auto a = new(fm::vector4)(tmp._v);
+		auto b = new(fm::vector4)(tmp._v);
 		a->dot(*b);
-		fm::simd::MEM_ALIGN_CHECK(a, FM_ALIGN_REQ);
+		MEM_ALIGN_CHECK(a, FM_ALIGN_REQ);
 	}
 	std::cout << "Memory align test has allocte " << totalAlloctMem << "B, test passed.\n";
 }

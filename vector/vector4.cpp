@@ -12,16 +12,6 @@ namespace fm {
 
 	vector4::vector4() FMTHROW : __data{ 0, 0, 0, 0 } {}
 
-	vector4::vector4(const std::initializer_list<FMFLOAT>& list) {
-#if defined(FM_DEBUG)
-		assert(list.size() == 4);
-#endif // FM_DEBUG
-		auto lp = list.begin();
-		for (char i = 0; i < 4; ++i, ++lp) {
-			__data[i] = *lp;
-		}
-	}
-
 	vector4::vector4(FMFLOAT a) FMTHROW : __data{ a, a, a, a } {}
 
 	vector4::vector4(const vector4& in) {

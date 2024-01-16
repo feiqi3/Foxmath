@@ -1,7 +1,8 @@
+#include "./testHeader.hpp"
 #include <cmath>
 #include <iostream>
 #include <cassert>
-#include "../vector/vector3.h"
+#include <vector>
 
 void dotTest();
 
@@ -132,7 +133,12 @@ void hasNanTest() {
 
 void memAlignTest(){
 	for (int i = 0; i < 1000; ++i) {
-		auto t = FM_ALIGN_NEW(fm::vector3)(2,3,5); 
-		fm::simd::MEM_ALIGN_CHECK(t, FM_ALIGN_REQ);
+		auto t = new(fm::vector3)(2,3,5); 
+		MEM_ALIGN_CHECK(t, FM_ALIGN_REQ);
+		auto vecVec4 =  std::vector<fm::vector4>(30);
+		for(auto &i : vecVec4){
+			i= i + fm::vector4(4);
+		}
+		MEM_ALIGN_CHECK(&vecVec4[0], FM_ALIGN_REQ);
 	}
 }

@@ -1,9 +1,9 @@
-#ifndef FOXVEC3_H_
-#define FOXVEC3_H_
-#include "FoxDef.h"
+#ifndef VECTOR3_H_
+#define VECTOR3_H_
+#include "../FoxDef.h"
 #include <ostream>
 namespace fm {
-	class vector3 {
+	class vector3 : public VecBase{
 	public:
 		vector3()FMTHROW;
 
@@ -15,10 +15,26 @@ namespace fm {
 
 		FMFLOAT& FM_CALL  operator[](size_t t) FMTHROW;
 
+		//constants
+		static  vector3 FM_CALL ones() FMTHROW;
+		static  vector3 FM_CALL right() FMTHROW;
+		static  vector3 FM_CALL left() FMTHROW;
+		static vector3 FM_CALL up() FMTHROW;
+		static vector3 FM_CALL down() FMTHROW;
+		static vector3 FM_CALL forward() FMTHROW;
+		static vector3 FM_CALL back() FMTHROW;
+
+		FMFLOAT& FM_CALL x() FMTHROW;
+		FMFLOAT& FM_CALL y() FMTHROW;
+		FMFLOAT& FM_CALL z() FMTHROW;
+
 		const FMFLOAT& FM_CALL operator[](size_t t) const FMTHROW;
+
 		const vector3  FM_CALL operator+(const vector3& b) const FMTHROW;
 
 		const vector3  FM_CALL operator-(const vector3& b) const FMTHROW;
+
+		const vector3  FM_CALL operator-() const FMTHROW;
 
 		const vector3  FM_CALL operator*(const vector3& b) const FMTHROW;
 
@@ -27,6 +43,10 @@ namespace fm {
 		friend std::ostream& operator<<(std::ostream& out, const vector3& s);
 
 		friend const vector3 FM_CALL operator*(const vector3& a, FMFLOAT b) FMTHROW;
+
+		friend vector3 FM_CALL clamp(const vector3& a, const vector3& max, const vector3& min)FMTHROW;
+
+		friend vector3 FM_CALL abs(const vector3& vec)FMTHROW;
 
 		friend class vector4;
 
@@ -39,10 +59,8 @@ namespace fm {
 		const vector3 FM_CALL cross(const vector3& b) const FMTHROW;
 	protected:
 		vector3(const simd::fmAlignFLoat4& in);
-
 	private:
 		fm::simd::fmAlignFLoat4 __data;
-
 	};
 
 	const vector3  FM_CALL operator*(const vector3& a, FMFLOAT b) FMTHROW;
@@ -53,7 +71,7 @@ namespace fm {
 
 	std::ostream& operator<<(std::ostream& out, const vector3& s);
 
-	bool  FM_CALL hasNan(const vector3& in) FMTHROW;
+	bool FM_CALL hasNan(const vector3& in) FMTHROW;
 
 }
 #endif

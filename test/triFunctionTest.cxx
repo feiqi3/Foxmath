@@ -1,6 +1,6 @@
-#include "3dOperation/constants.h"
-#include "3dOperation/operation.h"
-#include "base/basic_def.h"
+#include "Math/constants.h"
+#include "Math/Functions.h"
+#include "Math/Constants.h"
 #include <algorithm>
 #include <cassert>
 #include <chrono>
@@ -1567,16 +1567,6 @@ long double mSin(float x) {
 
 #define R_NUM 5000000
 
-double new_atan(double in) {
-	static fm::simd::fmAlignFLoat4 coef{ 1,0.703384,0.043562,0 };
-	double u2 = in * in;
-	double u4 = u2 * u2;
-	auto vecc = fm::simd::fmLoadVecP(coef._v);
-	auto veca = fm::simd::fmLoadVec(1, u2, u4, 0);
-	auto vecb = fm::simd::fmLoadVec(in, in * u2, 0, 0);
-	auto vecd = fm::simd::fmLoadVec(1, 0.372003, 0, 0);
-	return fm::simd::fmVecDot(vecb, vecd) / fm::simd::fmVecDot(veca, vecc);
-}
 
 int main() {
 	auto stdTan = [](double x) { return std::tan(x); };
@@ -1607,9 +1597,5 @@ int main() {
 	Timebenchmark(stdArctan, "std::atan", premuter);
 	Timebenchmark(fm::Arctan<double>, "fm::Arctan", premuter);
 	precisionTest(stdArctan, fm::Arctan<double>, "fm::Arctan", -3.14159, 3.14159, 0.0001);
-	std::cout << "<========================>\n\n";
-	Timebenchmark(stdArctan, "std::atan", premuter);
-	Timebenchmark(new_atan, "new_atan", premuter);
-	precisionTest(stdArctan, new_atan, "new_atan", -3.14159, 3.14159, 0.0001);
 
 }

@@ -1,11 +1,12 @@
 #ifndef MATRIX_4X4_H_
 #define MATRIX_4X4_H_
-#include "../vector/vector4.h"
+#include "../Vector/FoxVec4.h"
 namespace fm {
 
 class mat4 :public VecBase{
 public:
   mat4() FMTHROW;
+  mat4(const std::initializer_list<FMFLOAT> &in);
   mat4(FMFLOAT _m00, FMFLOAT _m01, FMFLOAT _m02, FMFLOAT _m03, FMFLOAT _m10,
        FMFLOAT _m11, FMFLOAT _m12, FMFLOAT _m13, FMFLOAT _m20, FMFLOAT _m21,
        FMFLOAT _m22, FMFLOAT _m23, FMFLOAT _m30, FMFLOAT _m31, FMFLOAT _m32,
@@ -27,7 +28,7 @@ public:
 
   const mat4 FM_CALL operator-(const mat4 &b) const FMTHROW;
 
-  mat4 FM_CALL inverse() const FMTHROW; // TODO
+  mat4 FM_CALL inverse() const FMTHROW;
 
   mat4 FM_CALL transpose() const FMTHROW;
 
