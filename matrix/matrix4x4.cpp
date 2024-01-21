@@ -22,7 +22,7 @@ mat4::mat4(const mat4 &in) {
   memcpy(this->__data, in.__data, sizeof(this->__data));
 }
 
-const vector4 FM_CALL mat4::operator[](size_t t) const noexcept {
+const vector4& FM_CALL mat4::operator[](size_t t) const noexcept {
   return __data[t];
 }
 

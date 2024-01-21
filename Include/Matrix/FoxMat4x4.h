@@ -16,7 +16,7 @@ public:
 
   mat4(const mat4 &in);
 
-  const vector4 FM_CALL operator[](size_t t) const FMTHROW;
+  const vector4& FM_CALL operator[](size_t t) const FMTHROW;
 
   vector4 &FM_CALL operator[](size_t t) FMTHROW;
 

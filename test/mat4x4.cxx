@@ -8,12 +8,20 @@ void SubTest();
 void TransposeTest();
 void determinant();
 void inverse();
-
+void memoryLayout(){
+  auto mat = fm::mat4::identity();
+  double* ptr = (double*)&mat[0];  
+  for (int i = 0; i < 16; ++i) {
+    std::cout<<ptr[i]<<" ";
+  }
+  std::cout<<std::endl;
+}
 int main() {
   MultiTest();
   TransposeTest();
   determinant();
   inverse();
+  memoryLayout();
 }
 
 void MultiTest() {
