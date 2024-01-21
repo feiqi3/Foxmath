@@ -53,6 +53,7 @@ namespace fm {
 		FMFLOAT FM_CALL maxElement() const FMTHROW;
 		FMFLOAT FM_CALL minElement() const FMTHROW;
 		FMFLOAT FM_CALL length() const FMTHROW;
+		void FM_CALL normalize()  FMTHROW;
 		vector3 FM_CALL square() const FMTHROW;
 		vector3 FM_CALL sqrt() const FMTHROW;
 		const FMFLOAT FM_CALL dot(const vector3& b) const FMTHROW;

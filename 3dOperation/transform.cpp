@@ -1,8 +1,8 @@
 #include "transform.h"
 
-#include "../vector/vector3.h"
-
 #include "../matrix/matrix4x4.h"
+#include "../vector/vector3.h"
+#include "../vector/vector4.h"
 #include <cmath>
 #include <cstdlib>
 #include <limits>
@@ -16,8 +16,7 @@ static bool FM_FORCE_INLINE isNormalized(const VecType &t) FMTHROW {
 
 namespace fm {
 
-fm::mat4 FM_CALL translate(
-                           const fm::vector3 &vector) FMTHROW {
+fm::mat4 FM_CALL translate(const fm::vector3 &vector) FMTHROW {
   mat4 tmp = mat4::identity();
   tmp[0][3] = vector[0];
   tmp[1][3] = vector[1];
@@ -37,8 +36,7 @@ fm::mat4 FM_CALL scale(const fm::vector3 &vector) FMTHROW {
 // Right hand system for default
 // For left hand system should use -theta instead of theta.
 // https://mathworld.wolfram.com/RodriguesRotationFormula.html
-fm::mat4 FM_CALL rotate(const fm::vector3 &axis,
-                        FMFLOAT angle) FMTHROW {
+fm::mat4 FM_CALL rotate(const fm::vector3 &axis, FMFLOAT angle) FMTHROW {
 #if defined(FM_DEBUG)
   // Axis vector should be normalized.
   assert(isNormalized(axis));
@@ -111,6 +109,35 @@ fm::mat4 FM_CALL rotate_mat_around_y(FMFLOAT angle) FMTHROW {
   return tmp;
 }
 
+fm::mat4 FM_CALL lookAt(const vector3 &Eye, const vector3 &Center,
+                        const vector3 &Up) {
+  mat4 Matrix;
+  vector3 X, Y, Z;
+  Z = Eye - Center;
+  Z.normalize();
+  Y = Up;
+  X = Y.cross(Z);
+  X.normalize();
+  Y.normalize();
+  Matrix[0][0] = X.x();
+  Matrix[1][0] = X.y();
+  Matrix[2][0] = X.z();
+  Matrix[3][0] = -X.dot(Eye);
+  Matrix[0][1] = Y.x();
+  Matrix[1][1] = Y.y();
+  Matrix[2][1] = Y.z();
+  Matrix[3][1] = -Y.dot(Eye);
+  Matrix[0][2] = Z.x();
+  Matrix[1][2] = Z.y();
+  Matrix[2][2] = Z.z();
+  Matrix[3][2] = -Z.dot(Eye);
+  Matrix[0][3] = 0;
+  Matrix[1][3] = 0;
+  Matrix[2][3] = 0;
+  Matrix[3][3] = 1.0f;
+  return Matrix;
+}
+
 fm::mat4 FM_CALL rotate_mat_around_z(FMFLOAT angle) FMTHROW {
   mat4 tmp = mat4::identity();
   auto cosTheta = std::cos(angle);
@@ -120,6 +147,32 @@ fm::mat4 FM_CALL rotate_mat_around_z(FMFLOAT angle) FMTHROW {
   tmp[1][0] = sinTheta;
   tmp[1][1] = cosTheta;
   return tmp;
+}
+
+fm::mat4 FM_CALL perspective(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                             FMFLOAT zFar) FMTHROW {
+
+  mat4 Matrix = mat4::zeros();
+  FMFLOAT f = fovy / 2;
+  Matrix[0][0] = f / aspect;
+  Matrix[1][1] = f;
+  Matrix[2][2] = (zFar + zNear) / (zNear - zFar);
+  Matrix[2][3] = (2 * zFar * zNear) / (zNear - zFar);
+  Matrix[3][2] = -1;
+  return Matrix;
+}
+
+fm::mat4 FM_CALL ortho(FMFLOAT const &left, FMFLOAT const &right,
+                       FMFLOAT const &bottom, FMFLOAT const &top,
+                       FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
+  mat4 Matrix;
+  Matrix[0][0] = 2. / (right - left);
+  Matrix[1][1] = 2. / (top - bottom);
+  Matrix[2][2] = -2. / (zFar - zNear);
+  Matrix[3][0] = -(right + left) / (right - left);
+  Matrix[3][1] = -(top + bottom) / (top - bottom);
+  Matrix[3][2] = -(zFar + zNear) / (zFar - zNear);
+  return Matrix;
 }
 
 } // namespace fm

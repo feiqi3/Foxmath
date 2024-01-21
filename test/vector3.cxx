@@ -1,4 +1,5 @@
 #include "./testHeader.hpp"
+#include "Vector/FoxVec3.h"
 #include <cmath>
 #include <iostream>
 #include <cassert>
@@ -26,6 +27,8 @@ void divTest();
 
 void hasNanTest();
 
+void normalizeTest();
+
 void memAlignTest();
 int main() {
 	dotTest();
@@ -40,6 +43,7 @@ int main() {
 	divTest();
 	hasNanTest();
     memAlignTest();
+	normalizeTest();
 }
 
 bool equ(FMFLOAT a, FMFLOAT b) {
@@ -141,4 +145,11 @@ void memAlignTest(){
 		}
 		MEM_ALIGN_CHECK(&vecVec4[0], FM_ALIGN_REQ);
 	}
+}
+
+void normalizeTest(){
+	fm::vector3 vec(-1,2,100);
+	vec.normalize();
+	std::cout<<vec.length()<<"\n";
+	assert(abs(vec.length() - 1) < 0.001);
 }

@@ -55,6 +55,8 @@ namespace fm {
 
 		vector4 FM_CALL square() const FMTHROW;
 
+		void FM_CALL normalize() FMTHROW;
+
 		vector4 FM_CALL sqrt() const FMTHROW;
 
 		// constants
