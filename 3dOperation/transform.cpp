@@ -3,6 +3,7 @@
 #include "../matrix/matrix4x4.h"
 #include "../vector/vector3.h"
 #include "../vector/vector4.h"
+#include "operation.h"
 #include <cmath>
 #include <cstdlib>
 #include <limits>
@@ -87,10 +88,10 @@ fm::mat4 FM_CALL rotate(const fm::mat4 &in, const fm::vector3 &w,
 }
 */
 
-fm::mat4 FM_CALL rotate_mat_around_x(FMFLOAT angle) FMTHROW {
+fm::mat4 FM_CALL rotateX_LH(FMFLOAT angle) FMTHROW {
   mat4 tmp = mat4::identity();
-  auto cosTheta = std::cos(angle);
-  auto sinTheta = std::sin(angle);
+  auto cosTheta = Cos(angle);
+  auto sinTheta = Sin(angle);
   tmp[1][1] = cosTheta;
   tmp[1][2] = -sinTheta;
   tmp[2][1] = sinTheta;
@@ -98,10 +99,10 @@ fm::mat4 FM_CALL rotate_mat_around_x(FMFLOAT angle) FMTHROW {
   return tmp;
 }
 
-fm::mat4 FM_CALL rotate_mat_around_y(FMFLOAT angle) FMTHROW {
+fm::mat4 FM_CALL rotateY_LH(FMFLOAT angle) FMTHROW {
   mat4 tmp = mat4::identity();
-  auto cosTheta = std::cos(angle);
-  auto sinTheta = std::sin(angle);
+  auto cosTheta = Cos(angle);
+  auto sinTheta = Sin(angle);
   tmp[0][0] = cosTheta;
   tmp[0][2] = sinTheta;
   tmp[2][0] = -sinTheta;
@@ -109,39 +110,10 @@ fm::mat4 FM_CALL rotate_mat_around_y(FMFLOAT angle) FMTHROW {
   return tmp;
 }
 
-fm::mat4 FM_CALL lookAt(const vector3 &Eye, const vector3 &Center,
-                        const vector3 &Up) {
-  mat4 Matrix;
-  vector3 X, Y, Z;
-  Z = Eye - Center;
-  Z.normalize();
-  Y = Up;
-  X = Y.cross(Z);
-  X.normalize();
-  Y.normalize();
-  Matrix[0][0] = X.x();
-  Matrix[1][0] = X.y();
-  Matrix[2][0] = X.z();
-  Matrix[3][0] = -X.dot(Eye);
-  Matrix[0][1] = Y.x();
-  Matrix[1][1] = Y.y();
-  Matrix[2][1] = Y.z();
-  Matrix[3][1] = -Y.dot(Eye);
-  Matrix[0][2] = Z.x();
-  Matrix[1][2] = Z.y();
-  Matrix[2][2] = Z.z();
-  Matrix[3][2] = -Z.dot(Eye);
-  Matrix[0][3] = 0;
-  Matrix[1][3] = 0;
-  Matrix[2][3] = 0;
-  Matrix[3][3] = 1.0f;
-  return Matrix;
-}
-
-fm::mat4 FM_CALL rotate_mat_around_z(FMFLOAT angle) FMTHROW {
+fm::mat4 FM_CALL rotateZ_LH(FMFLOAT angle) FMTHROW {
   mat4 tmp = mat4::identity();
-  auto cosTheta = std::cos(angle);
-  auto sinTheta = std::sin(angle);
+  auto cosTheta = Cos(angle);
+  auto sinTheta = Sin(angle);
   tmp[0][0] = cosTheta;
   tmp[0][1] = -sinTheta;
   tmp[1][0] = sinTheta;
@@ -149,30 +121,210 @@ fm::mat4 FM_CALL rotate_mat_around_z(FMFLOAT angle) FMTHROW {
   return tmp;
 }
 
-fm::mat4 FM_CALL perspective(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
-                             FMFLOAT zFar) FMTHROW {
-
-  mat4 Matrix = mat4::zeros();
-  FMFLOAT f = fovy / 2;
-  Matrix[0][0] = f / aspect;
-  Matrix[1][1] = f;
-  Matrix[2][2] = (zFar + zNear) / (zNear - zFar);
-  Matrix[2][3] = (2 * zFar * zNear) / (zNear - zFar);
-  Matrix[3][2] = -1;
-  return Matrix;
+fm::mat4 FM_CALL rotateX_RH(FMFLOAT angle) FMTHROW {
+  mat4 tmp = mat4::identity();
+  auto cosTheta = Cos(angle);
+  auto sinTheta = Sin(angle);
+  tmp[1][1] = cosTheta;
+  tmp[1][2] = sinTheta;
+  tmp[2][1] = -sinTheta;
+  tmp[2][2] = cosTheta;
+  return tmp;
 }
 
-fm::mat4 FM_CALL ortho(FMFLOAT const &left, FMFLOAT const &right,
-                       FMFLOAT const &bottom, FMFLOAT const &top,
-                       FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
-  mat4 Matrix;
-  Matrix[0][0] = 2. / (right - left);
-  Matrix[1][1] = 2. / (top - bottom);
-  Matrix[2][2] = -2. / (zFar - zNear);
-  Matrix[3][0] = -(right + left) / (right - left);
-  Matrix[3][1] = -(top + bottom) / (top - bottom);
-  Matrix[3][2] = -(zFar + zNear) / (zFar - zNear);
-  return Matrix;
+fm::mat4 FM_CALL rotateY_RH(FMFLOAT angle) FMTHROW {
+  mat4 tmp = mat4::identity();
+  auto cosTheta = Cos(angle);
+  auto sinTheta = Sin(angle);
+  tmp[0][0] = cosTheta;
+  tmp[0][2] = -sinTheta;
+  tmp[2][0] = sinTheta;
+  tmp[2][2] = cosTheta;
+  return tmp;
+}
+
+fm::mat4 FM_CALL rotateZ_RH(FMFLOAT angle) FMTHROW {
+  mat4 tmp = mat4::identity();
+  auto cosTheta = Cos(angle);
+  auto sinTheta = Sin(angle);
+  tmp[0][0] = cosTheta;
+  tmp[0][1] = sinTheta;
+  tmp[1][0] = -sinTheta;
+  tmp[1][1] = cosTheta;
+  return tmp;
+}
+
+FMFLOAT dot(const vector3 &a, const vector3 &b) { return a.dot(b); }
+
+FMFLOAT dot(const vector4 &a, const vector4 &b) { return a.dot(b); }
+
+vector3 cross(const vector3 &a, const vector3 &b) { return a.cross(b); }
+
+vector4 cross(const vector4 &a, const vector4 &b) { return a.cross(b); }
+
+vector4 normalize(const vector4 &a) { return a / a.length(); }
+
+vector3 normalize(const vector3 &a) { return a / a.length(); }
+
+fm::mat4 FM_CALL lookAtRH(const vector3 &eye, const vector3 &center,
+                          const vector3 &up) {
+  vector3 f(normalize(center - eye));
+  vector3 s(normalize(cross(f, up)));
+  vector3 u(cross(s, f));
+  mat4 Result = mat4::identity();
+  Result[0][0] = s.x();
+  Result[0][1] = s.y();
+  Result[0][2] = s.z();
+  Result[1][0] = u.x();
+  Result[1][1] = u.y();
+  Result[1][2] = u.z();
+  Result[2][0] = -f.x();
+  Result[2][1] = -f.y();
+  Result[2][2] = -f.z();
+  Result[0][3] = -dot(s, eye);
+  Result[1][3] = -dot(u, eye);
+  Result[2][3] = dot(f, eye);
+  return Result;
+}
+
+fm::mat4 FM_CALL lookAtLH(const vector3 &eye, const vector3 &center,
+                          const vector3 &up) {
+  vector3 f(normalize(center - eye));
+  vector3 s(normalize(cross(up, f)));
+  vector3 u(cross(f, s));
+
+  mat4 Result = mat4::identity();
+  Result[0][0] = s.x();
+  Result[0][1] = s.y();
+  Result[0][2] = s.z();
+  Result[1][0] = u.x();
+  Result[1][1] = u.y();
+  Result[1][2] = u.z();
+  Result[2][0] = f.x();
+  Result[2][1] = f.y();
+  Result[2][2] = f.z();
+  Result[0][3] = -dot(s, eye);
+  Result[1][3] = -dot(u, eye);
+  Result[2][3] = -dot(f, eye);
+  return Result;
+}
+
+// z from 0 to 1
+fm::mat4 FM_CALL perspectiveRH(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                               FMFLOAT zFar) FMTHROW {
+
+  FMFLOAT tanHalfFovy = Tan(fovy / static_cast<FMFLOAT>(2));
+
+  mat4 Result = mat4::zeros();
+  Result[0][0] = -static_cast<FMFLOAT>(1) / (aspect * tanHalfFovy);
+  Result[1][1] = -static_cast<FMFLOAT>(1) / (tanHalfFovy);
+  Result[2][2] = -zFar / (zFar - zNear);
+  Result[3][2] = static_cast<FMFLOAT>(1);
+  Result[2][3] = -(zFar * zNear) / (zFar - zNear);
+  return Result;
+}
+
+// This will inverse Z
+// means (right hand)before -> (left hand)after
+mat4 FM_CALL perspectiveRH_InvZ(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                                FMFLOAT zFar) {
+  assert(abs(aspect - std::numeric_limits<FMFLOAT>::epsilon()) >
+         static_cast<FMFLOAT>(0));
+
+  FMFLOAT tanHalfFovy = Tan(fovy / static_cast<FMFLOAT>(2));
+
+  mat4 Result = mat4::zeros();
+  Result[0][0] = -static_cast<FMFLOAT>(1) / (aspect * tanHalfFovy);
+  Result[1][1] = -static_cast<FMFLOAT>(1) / (tanHalfFovy);
+  Result[2][2] = zFar / (zFar - zNear);
+  Result[3][2] = static_cast<FMFLOAT>(1);
+  Result[2][3] = (zFar * zNear) / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL perspectiveLH(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                               FMFLOAT zFar) FMTHROW {
+  assert(abs(aspect - std::numeric_limits<FMFLOAT>::epsilon()) >
+         static_cast<FMFLOAT>(0));
+
+  FMFLOAT tanHalfFovy = Tan(fovy / static_cast<FMFLOAT>(2));
+
+  mat4 Result = mat4::identity();
+  Result[0][0] = -static_cast<FMFLOAT>(1) / (aspect * tanHalfFovy);
+  Result[1][1] = -static_cast<FMFLOAT>(1) / (tanHalfFovy);
+  Result[2][2] = zFar / (zFar - zNear);
+  Result[3][2] = -static_cast<FMFLOAT>(1);
+  Result[2][3] = -(zFar * zNear) / (zFar - zNear);
+  return Result;
+}
+fm::mat4 FM_CALL perspectiveLH_InvZ(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                                    FMFLOAT zFar) FMTHROW {
+  assert(abs(aspect - std::numeric_limits<FMFLOAT>::epsilon()) >
+         static_cast<FMFLOAT>(0));
+
+  FMFLOAT tanHalfFovy = tan(fovy / static_cast<FMFLOAT>(2));
+
+  mat4 Result = mat4::identity();
+  Result[0][0] = -static_cast<FMFLOAT>(1) / (aspect * tanHalfFovy);
+  Result[1][1] = -static_cast<FMFLOAT>(1) / (tanHalfFovy);
+  Result[2][2] = -zFar / (zFar - zNear);
+  Result[3][2] = -static_cast<FMFLOAT>(1);
+  Result[2][3] = (zFar * zNear) / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL orthoLH_InvZ(FMFLOAT const &left, FMFLOAT const &right,
+                              FMFLOAT const &bottom, FMFLOAT const &top,
+                              FMFLOAT const &zNear,
+                              FMFLOAT const &zFar) FMTHROW {
+  mat4 Result = mat4::identity();
+  Result[0][0] = 2. / (right - left);
+  Result[1][1] = 2. / (top - bottom);
+  Result[2][2] = 1. / (zFar - zNear);
+  Result[0][3] = -(right + left) / (right - left);
+  Result[1][3] = -(top + bottom) / (top - bottom);
+  Result[2][3] = -zNear / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL orthoLH(FMFLOAT const &left, FMFLOAT const &right,
+                         FMFLOAT const &bottom, FMFLOAT const &top,
+                         FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
+  mat4 Result = mat4::identity();
+  Result[0][0] = 2. / (right - left);
+  Result[1][1] = 2. / (top - bottom);
+  Result[2][2] = -1. / (zFar - zNear);
+  Result[0][3] = -(right + left) / (right - left);
+  Result[1][3] = -(top + bottom) / (top - bottom);
+  Result[2][3] = zNear / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL orthoRH_InvZ(FMFLOAT const &left, FMFLOAT const &right,
+                              FMFLOAT const &bottom, FMFLOAT const &top,
+                              FMFLOAT const &zNear,
+                              FMFLOAT const &zFar) FMTHROW {
+  mat4 Result = mat4::identity();
+  Result[0][0] = (2.) / (right - left);
+  Result[1][1] = 2. / (top - bottom);
+  Result[2][2] = -1. / (zFar - zNear);
+  Result[0][3] = -(right + left) / (right - left);
+  Result[1][3] = -(top + bottom) / (top - bottom);
+  Result[2][3] = -zNear / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL orthoRH(FMFLOAT const &left, FMFLOAT const &right,
+                         FMFLOAT const &bottom, FMFLOAT const &top,
+                         FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
+  mat4 Result = mat4::identity();
+  Result[0][0] = (2.) / (right - left);
+  Result[1][1] = 2. / (top - bottom);
+  Result[2][2] = 1. / (zFar - zNear);
+  Result[0][3] = -(right + left) / (right - left);
+  Result[1][3] = -(top + bottom) / (top - bottom);
+  Result[2][3] = zNear / (zFar - zNear);
+  return Result;
 }
 
 } // namespace fm
