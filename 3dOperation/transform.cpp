@@ -243,10 +243,10 @@ mat4 FM_CALL perspectiveRHZO_InvZ(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
 }
 
 fm::mat4 FM_CALL perspectiveRHNO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
-                                       FMFLOAT zNear, FMFLOAT zFar) FMTHROW {
+                                      FMFLOAT zNear, FMFLOAT zFar) FMTHROW {
 
-  mat4 Result = mat4::identity();
-  FMFLOAT tanHalfFovy = tan(fovy / static_cast<FMFLOAT>(2));
+  mat4 Result = mat4::zeros();
+  FMFLOAT tanHalfFovy = Tan(fovy / static_cast<FMFLOAT>(2));
   Result[0][0] = (1.) / (aspect * tanHalfFovy);
   Result[1][1] = (1.) / (tanHalfFovy);
   Result[3][2] = -(1.);
@@ -255,11 +255,11 @@ fm::mat4 FM_CALL perspectiveRHNO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
   return Result;
 }
 
-fm::mat4 FM_CALL perspectiveRHNO(FMFLOAT fovy, FMFLOAT aspect,
-                                       FMFLOAT zNear, FMFLOAT zFar) FMTHROW {
+fm::mat4 FM_CALL perspectiveRHNO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                                 FMFLOAT zFar) FMTHROW {
 
   mat4 Result = mat4::zeros();
-  FMFLOAT tanHalfFovy = tan(fovy / static_cast<FMFLOAT>(2));
+  FMFLOAT tanHalfFovy = Tan(fovy / static_cast<FMFLOAT>(2));
   Result[0][0] = -(1.) / (aspect * tanHalfFovy);
   Result[1][1] = -(1.) / (tanHalfFovy);
   Result[3][2] = (1.);
@@ -276,27 +276,11 @@ fm::mat4 FM_CALL perspectiveLHZO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
   FMFLOAT tanHalfFovy = Tan(fovy / static_cast<FMFLOAT>(2));
 
   mat4 Result = mat4::zeros();
-  Result[0][0] = -static_cast<FMFLOAT>(1) / (aspect * tanHalfFovy);
-  Result[1][1] = -static_cast<FMFLOAT>(1) / (tanHalfFovy);
+  Result[0][0] = static_cast<FMFLOAT>(1) / (aspect * tanHalfFovy);
+  Result[1][1] = static_cast<FMFLOAT>(1) / (tanHalfFovy);
   Result[2][2] = zFar / (zFar - zNear);
-  Result[3][2] = -static_cast<FMFLOAT>(1);
+  Result[3][2] = static_cast<FMFLOAT>(1);
   Result[2][3] = -(zFar * zNear) / (zFar - zNear);
-  return Result;
-}
-
-fm::mat4 FM_CALL perspectiveLHZO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
-                                      FMFLOAT zNear, FMFLOAT zFar) FMTHROW {
-  assert(abs(aspect - std::numeric_limits<FMFLOAT>::epsilon()) >
-         static_cast<FMFLOAT>(0));
-
-  FMFLOAT tanHalfFovy = tan(fovy / static_cast<FMFLOAT>(2));
-
-  mat4 Result = mat4::zeros();
-  Result[0][0] = -static_cast<FMFLOAT>(1) / (aspect * tanHalfFovy);
-  Result[1][1] = -static_cast<FMFLOAT>(1) / (tanHalfFovy);
-  Result[2][2] = -zFar / (zFar - zNear);
-  Result[3][2] = -static_cast<FMFLOAT>(1);
-  Result[2][3] = (zFar * zNear) / (zFar - zNear);
   return Result;
 }
 
@@ -307,35 +291,17 @@ fm::mat4 FM_CALL perspectiveLHNO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
 
   FMFLOAT tanHalfFovy = tan(fovy / static_cast<FMFLOAT>(2));
   mat4 Result = mat4::zeros();
-		Result[0][0] = -(1.) / (aspect * tanHalfFovy);
-		Result[1][1] = -(1.) / (tanHalfFovy);
-		Result[2][2] = -(zFar + zNear) / (zFar - zNear);
-		Result[2][3] = - ((2.) * zFar * zNear) / (zFar - zNear);
-		Result[3][2] = -(1.);
+  Result[0][0] = (1.) / (aspect * tanHalfFovy);
+  Result[1][1] = (1.) / (tanHalfFovy);
+  Result[2][2] = (zFar + zNear) / (zFar - zNear);
+  Result[2][3] = -((2.) * zFar * zNear) / (zFar - zNear);
+  Result[3][2] = (1.);
   return Result;
 }
 
-fm::mat4 FM_CALL perspectiveLHNO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
-                                      FMFLOAT zNear, FMFLOAT zFar) FMTHROW {
-  assert(abs(aspect - std::numeric_limits<FMFLOAT>::epsilon()) >
-         static_cast<FMFLOAT>(0));
-
-  FMFLOAT tanHalfFovy = tan(fovy / static_cast<FMFLOAT>(2));
-  mat4 Result = mat4::zeros();
-		Result[0][0] = (1.) / (aspect * tanHalfFovy);
-		Result[1][1] = (1.) / (tanHalfFovy);
-		Result[2][2] = (zFar + zNear) / (zFar - zNear);
-		Result[2][3] = - ((2.) * zFar * zNear) / (zFar - zNear);
-		Result[3][2] = (1.);
-		return Result;
-}
-
-
-
-fm::mat4 FM_CALL orthoLH_InvZ(FMFLOAT const &left, FMFLOAT const &right,
-                              FMFLOAT const &bottom, FMFLOAT const &top,
-                              FMFLOAT const &zNear,
-                              FMFLOAT const &zFar) FMTHROW {
+fm::mat4 FM_CALL orthoLH_ZO(FMFLOAT const &left, FMFLOAT const &right,
+                            FMFLOAT const &bottom, FMFLOAT const &top,
+                            FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
   mat4 Result = mat4::identity();
   Result[0][0] = 2. / (right - left);
   Result[1][1] = 2. / (top - bottom);
@@ -346,43 +312,97 @@ fm::mat4 FM_CALL orthoLH_InvZ(FMFLOAT const &left, FMFLOAT const &right,
   return Result;
 }
 
-fm::mat4 FM_CALL orthoLH(FMFLOAT const &left, FMFLOAT const &right,
-                         FMFLOAT const &bottom, FMFLOAT const &top,
-                         FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
-  mat4 Result = mat4::identity();
-  Result[0][0] = 2. / (right - left);
-  Result[1][1] = 2. / (top - bottom);
-  Result[2][2] = -1. / (zFar - zNear);
+fm::mat4 FM_CALL orthoLH_NO(FMFLOAT const &left, FMFLOAT const &right,
+                            FMFLOAT const &bottom, FMFLOAT const &top,
+                            FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
+
+  fm::mat4 Result = fm::mat4::identity();
+  Result[0][0] = (2.) / (right - left);
+  Result[1][1] = (2.) / (top - bottom);
+  Result[2][2] = (2.) / (zFar - zNear);
   Result[0][3] = -(right + left) / (right - left);
   Result[1][3] = -(top + bottom) / (top - bottom);
-  Result[2][3] = zNear / (zFar - zNear);
+  Result[2][3] = -(zFar + zNear) / (zFar - zNear);
   return Result;
 }
 
-fm::mat4 FM_CALL orthoRH_InvZ(FMFLOAT const &left, FMFLOAT const &right,
-                              FMFLOAT const &bottom, FMFLOAT const &top,
-                              FMFLOAT const &zNear,
-                              FMFLOAT const &zFar) FMTHROW {
+fm::mat4 FM_CALL orthoRHZO_InvZ(FMFLOAT const &left, FMFLOAT const &right,
+                                FMFLOAT const &bottom, FMFLOAT const &top,
+                                FMFLOAT const &zNear,
+                                FMFLOAT const &zFar) FMTHROW {
   mat4 Result = mat4::identity();
   Result[0][0] = (2.) / (right - left);
-  Result[1][1] = 2. / (top - bottom);
-  Result[2][2] = -1. / (zFar - zNear);
+  Result[1][1] = (2.) / (top - bottom);
+  Result[2][2] = -(1.) / (zFar - zNear);
   Result[0][3] = -(right + left) / (right - left);
   Result[1][3] = -(top + bottom) / (top - bottom);
   Result[2][3] = -zNear / (zFar - zNear);
   return Result;
 }
 
-fm::mat4 FM_CALL orthoRH(FMFLOAT const &left, FMFLOAT const &right,
-                         FMFLOAT const &bottom, FMFLOAT const &top,
-                         FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
+fm::mat4 FM_CALL orthoRHZO(FMFLOAT const &left, FMFLOAT const &right,
+                           FMFLOAT const &bottom, FMFLOAT const &top,
+                           FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
   mat4 Result = mat4::identity();
   Result[0][0] = (2.) / (right - left);
-  Result[1][1] = 2. / (top - bottom);
-  Result[2][2] = 1. / (zFar - zNear);
+  Result[1][1] = (2.) / (top - bottom);
+  Result[2][2] = -(1.) / (zFar - zNear);
   Result[0][3] = -(right + left) / (right - left);
   Result[1][3] = -(top + bottom) / (top - bottom);
   Result[2][3] = zNear / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL orthoRHNO(FMFLOAT const &left, FMFLOAT const &right,
+                           FMFLOAT const &bottom, FMFLOAT const &top,
+                           FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
+  mat4 Result = mat4::identity();
+  Result[0][0] = (2.) / (right - left);
+  Result[1][1] = (2.) / (top - bottom);
+  Result[2][2] = -(2.) / (zFar - zNear);
+  Result[3][0] = -(right + left) / (right - left);
+  Result[3][1] = -(top + bottom) / (top - bottom);
+  Result[3][2] = (zFar + zNear) / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL orthoRHNO_InvZ(FMFLOAT const &left, FMFLOAT const &right,
+                                FMFLOAT const &bottom, FMFLOAT const &top,
+                                FMFLOAT const &zNear,
+                                FMFLOAT const &zFar) FMTHROW {
+  mat4 Result = mat4::identity();
+  Result[0][0] = (2.) / (right - left);
+  Result[1][1] = (2.) / (top - bottom);
+  Result[2][2] = -(2.) / (zFar - zNear);
+  Result[3][0] = -(right + left) / (right - left);
+  Result[3][1] = -(top + bottom) / (top - bottom);
+  Result[3][2] = -(zFar + zNear) / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL orthoLHZO(FMFLOAT const &left, FMFLOAT const &right,
+                           FMFLOAT const &bottom, FMFLOAT const &top,
+                           FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
+  mat4 Result = mat4::identity();
+  Result[0][0] = (2.) / (right - left);
+  Result[1][1] = (2.) / (top - bottom);
+  Result[2][2] = (1.) / (zFar - zNear);
+  Result[3][0] = -(right + left) / (right - left);
+  Result[3][1] = -(top + bottom) / (top - bottom);
+  Result[3][2] = -zNear / (zFar - zNear);
+  return Result;
+}
+
+fm::mat4 FM_CALL orthoLHNO(FMFLOAT const &left, FMFLOAT const &right,
+                           FMFLOAT const &bottom, FMFLOAT const &top,
+                           FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW {
+  mat4 Result = mat4::identity();
+  Result[0][0] = (2.) / (right - left);
+  Result[1][1] = (2.) / (top - bottom);
+  Result[2][2] = (2.) / (zFar - zNear);
+  Result[3][0] = -(right + left) / (right - left);
+  Result[3][1] = -(top + bottom) / (top - bottom);
+  Result[3][2] = -(zFar + zNear) / (zFar - zNear);
   return Result;
 }
 

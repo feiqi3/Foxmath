@@ -42,32 +42,43 @@ fm::mat4 FM_CALL perspectiveRHNO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
 fm::mat4 FM_CALL perspectiveLHZO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
                                  FMFLOAT zFar) FMTHROW;
 
-fm::mat4 FM_CALL perspectiveLHZO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
-                                      FMFLOAT zNear, FMFLOAT zFar) FMTHROW;
-
 fm::mat4 FM_CALL perspectiveLHNO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
                                  FMFLOAT zFar) FMTHROW;
-
-fm::mat4 FM_CALL perspectiveLHNO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
-                                      FMFLOAT zNear, FMFLOAT zFar) FMTHROW;
 
 fm::mat4 FM_CALL orthoLH_InvZ(FMFLOAT const &left, FMFLOAT const &right,
                               FMFLOAT const &bottom, FMFLOAT const &top,
                               FMFLOAT const &zNear,
                               FMFLOAT const &zFar) FMTHROW;
 
-fm::mat4 FM_CALL orthoLH(FMFLOAT const &left, FMFLOAT const &right,
+fm::mat4 FM_CALL orthoLHZO(FMFLOAT const &left, FMFLOAT const &right,
                          FMFLOAT const &bottom, FMFLOAT const &top,
                          FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW;
 
-fm::mat4 FM_CALL orthoRH_InvZ(FMFLOAT const &left, FMFLOAT const &right,
+fm::mat4 FM_CALL orthoLHNO(FMFLOAT const &left, FMFLOAT const &right,
+                         FMFLOAT const &bottom, FMFLOAT const &top,
+                         FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW;
+
+
+fm::mat4 FM_CALL orthoRHZO_InvZ(FMFLOAT const &left, FMFLOAT const &right,
                               FMFLOAT const &bottom, FMFLOAT const &top,
                               FMFLOAT const &zNear,
                               FMFLOAT const &zFar) FMTHROW;
 
-fm::mat4 FM_CALL orthoRH(FMFLOAT const &left, FMFLOAT const &right,
+fm::mat4 FM_CALL orthoRHZO(FMFLOAT const &left, FMFLOAT const &right,
                          FMFLOAT const &bottom, FMFLOAT const &top,
                          FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW;
+
+fm::mat4 FM_CALL orthoRHNO(FMFLOAT const &left, FMFLOAT const &right,
+                         FMFLOAT const &bottom, FMFLOAT const &top,
+                         FMFLOAT const &zNear, FMFLOAT const &zFar) FMTHROW;
+
+
+fm::mat4 FM_CALL orthoRHNO_InvZ(FMFLOAT const &left, FMFLOAT const &right,
+                              FMFLOAT const &bottom, FMFLOAT const &top,
+                              FMFLOAT const &zNear,
+                              FMFLOAT const &zFar) FMTHROW;
+
+
 } // namespace fm
 
 #endif
