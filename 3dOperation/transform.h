@@ -9,12 +9,11 @@ class vector3;
 
 class mat4;
 
-fm::mat4 FM_CALL translate(const fm::vector3 &vector)FMTHROW;
+fm::mat4 FM_CALL translate(const fm::vector3 &vector) FMTHROW;
 
-fm::mat4 FM_CALL scale(const fm::vector3 &vector)FMTHROW;
+fm::mat4 FM_CALL scale(const fm::vector3 &vector) FMTHROW;
 
-fm::mat4 FM_CALL rotate(const fm::vector3 &axis,
-                        FMFLOAT angle)FMTHROW;
+fm::mat4 FM_CALL rotate(const fm::vector3 &axis, FMFLOAT angle) FMTHROW;
 
 fm::mat4 FM_CALL rotateX_LH(FMFLOAT angle) FMTHROW;
 fm::mat4 FM_CALL rotateX_RH(FMFLOAT angle) FMTHROW;
@@ -27,17 +26,30 @@ fm::mat4 FM_CALL lookAtRH(const vector3 &eye, const vector3 &center,
                           const vector3 &up);
 fm::mat4 FM_CALL lookAtLH(const vector3 &eye, const vector3 &center,
                           const vector3 &up);
-fm::mat4 FM_CALL perspectiveRH(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
-                               FMFLOAT zFar) FMTHROW;
 
-mat4 FM_CALL perspectiveRH_InvZ(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
-                                FMFLOAT zFar);
+fm::mat4 FM_CALL perspectiveRHZO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                                 FMFLOAT zFar) FMTHROW;
 
-fm::mat4 FM_CALL perspectiveLH(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
-                               FMFLOAT zFar) FMTHROW;
+mat4 FM_CALL perspectiveRHZO_InvZ(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                                  FMFLOAT zFar);
 
-fm::mat4 FM_CALL perspectiveLH_InvZ(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
-                                    FMFLOAT zFar) FMTHROW;
+fm::mat4 FM_CALL perspectiveRHNO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
+                                      FMFLOAT zNear, FMFLOAT zFar) FMTHROW;
+
+fm::mat4 FM_CALL perspectiveRHNO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                                 FMFLOAT zFar) FMTHROW;
+
+fm::mat4 FM_CALL perspectiveLHZO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                                 FMFLOAT zFar) FMTHROW;
+
+fm::mat4 FM_CALL perspectiveLHZO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
+                                      FMFLOAT zNear, FMFLOAT zFar) FMTHROW;
+
+fm::mat4 FM_CALL perspectiveLHNO(FMFLOAT fovy, FMFLOAT aspect, FMFLOAT zNear,
+                                 FMFLOAT zFar) FMTHROW;
+
+fm::mat4 FM_CALL perspectiveLHNO_InvZ(FMFLOAT fovy, FMFLOAT aspect,
+                                      FMFLOAT zNear, FMFLOAT zFar) FMTHROW;
 
 fm::mat4 FM_CALL orthoLH_InvZ(FMFLOAT const &left, FMFLOAT const &right,
                               FMFLOAT const &bottom, FMFLOAT const &top,
