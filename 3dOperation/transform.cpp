@@ -30,7 +30,6 @@ fm::mat4 FM_CALL scale(const fm::vector3 &vector) FMTHROW {
   tmp[0][0] *= vector[0];
   tmp[1][1] *= vector[1];
   tmp[2][2] *= vector[2];
-  tmp[3][3] *= vector[3];
   return tmp;
 }
 
