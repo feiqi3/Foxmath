@@ -171,10 +171,10 @@ void mat4::LU(mat4 *outL, mat4 *outU) const FMTHROW {
   (*outL)[3][0] = r30Factor;
   (*outL)[3][1] = r31Factor;
   (*outL)[3][2] = r32Factor;
-  (*outL)[4][0] = r40Factor;
+/*   (*outL)[4][0] = r40Factor;
   (*outL)[4][1] = r41Factor;
   (*outL)[4][2] = r42Factor;
-  (*outL)[4][3] = r43Factor;
+  (*outL)[4][3] = r43Factor; */
   *outU = mat4(Row0, Row1, Row2, Row3);
   return;
 }
