@@ -154,7 +154,7 @@ void mat4::LU(mat4 *outL, mat4 *outU) const FMTHROW {
   FMFLOAT r32Factor = Row3[2] / Row2[2];
   Row3 = Row3 - r32Factor * Row2;
 
-  auto Row4 = (*this)[4];
+/*   auto Row4 = (*this)[4];
   FMFLOAT r40Factor = Row4[0] / Row0[0];
   Row4 = Row4 - r30Factor * Row0;
   FMFLOAT r41Factor = Row4[1] / Row1[1];
@@ -162,7 +162,7 @@ void mat4::LU(mat4 *outL, mat4 *outU) const FMTHROW {
   FMFLOAT r42Factor = Row4[2] / Row2[2];
   Row4 = Row4 - r42Factor * Row2;
   FMFLOAT r43Factor = Row4[3] / Row3[3];
-  Row4 = Row4 - r43Factor * Row3;
+  Row4 = Row4 - r43Factor * Row3; */
 
   *outL = mat4(mat4Ones);
   (*outL)[1][0] = r1Factor;

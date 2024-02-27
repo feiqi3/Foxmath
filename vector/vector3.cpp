@@ -23,7 +23,7 @@ vector3::vector3(const simd::fmAlignFLoat4 &in) {
 }
 
 fm::vector3::vector3(const fm::vector3 &in) FMTHROW {
-  memcpy(this->__data._v, in.__data._v, 3 * sizeof(FMFLOAT));
+  memcpy(this->__data._v, in.__data._v, 4 * sizeof(FMFLOAT));
 }
 
 FMFLOAT &FM_CALL vector3::operator[](size_t t) FMTHROW {
