@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstddef>
 #include <stdint.h>
+#include<malloc.h>
 
 // Only works under x86
 #if defined(_MSC_VER)
