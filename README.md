@@ -41,6 +41,13 @@ If use double as main element, Macro "FOX_USE_DOUBLE" should be defined.
 
 最近我对Vulkan简单封装快到了尾声，也就意味着我要开始去写渲染器的上层了，这时候数学库的修改成了急切需求，目前底下的任务列表我尽量会保持一星期一个的速度去完成，分为必须和额外，额外的任务我可能不会实现，一切都看我的实际需求。       
 毕竟目前还是以我的vk渲染器优先                
+---------------------------------------------------------------------------------------------      
+
+###   Note after the change on "a more compact memory alignment for vec3."        
+再次跑起了这个项目，很高兴能看到其在数学运算函数方面任然能比标准库的实现快，不过除此以外只剩下头痛          
+当初为了减少工作量所以选择了只有一种浮点类型能在内部存在，如今显得有些...难以下手改动，可能需要全部改成模板            
+当初很多设计也显得十分奇怪，不过可以理解，为了时间的无奈之举，也需要进行修改               
+正因如此，要支持下面列出的所有特性，恐怕需要很长很长期的努力了，不过我还是会试试的OwO       
 
 ----------------------------------------------------------------------------------------------        
 
@@ -51,6 +58,7 @@ These are musts
 2. support for vec2.     
 3. support for fvec4, fvec3, fvec2 (aka fp32)       
 3. support for hvec4, hvec3, hvec2 (aka half precision)     
+4. change the annoying cmake define.    
 
 These are optionals    
 1. support for ivec     
