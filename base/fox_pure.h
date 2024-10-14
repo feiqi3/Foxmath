@@ -11,9 +11,18 @@ namespace fm {
 
 	namespace simd {
 
-		_fm_vec4 FM_FORCE_INLINE FM_CALL fmLoadVecP(const FMFLOAT* pd) {
+
+		template<typename element, size_t element_num,typename = std::enable_if<std::is_floating_point_v<element>>>
+		_fm_vec4 FM_FORCE_INLINE FM_CALL fmLoadVecP(const element (&pd)[element_num]) {
 			_fm_vec4 ret;
-			std::memcpy(ret.v, pd, 4 * sizeof(FMFLOAT));
+			std::memcpy(ret.v, pd, element_num * sizeof(element));
+			if constexpr (element_num < 4) {
+				ret.v[3] = 0;
+			}
+
+			if constexpr (element_num < 3) {
+				ret.v[2] = 0;
+			}
 			return ret;
 		}
 
@@ -27,8 +36,9 @@ namespace fm {
 			return ret;
 		}
 
-		void FM_FORCE_INLINE FM_CALL fmStoreVec(fmAlignFLoat4& f4, _fm_vec4 vec) {
-			memcpy(f4._v, vec.v, 4 * sizeof(FMFLOAT));
+		template<typename element,size_t element_num, typename = std::enable_if<std::is_floating_point_v<element>>>
+		void FM_FORCE_INLINE FM_CALL fmStoreVec(element (&pf)[element_num], _fm_vec4 vec) {
+			memcpy(pf, vec.v, element_num * sizeof(element));
 		}
 
 		FMFLOAT FM_FORCE_INLINE FM_CALL fmGetElem(const _fm_vec4& vec, int pos) {
@@ -166,7 +176,6 @@ namespace fm {
 			ret.v[0] = veca.v[1] * vecb.v[2] - veca.v[2] * vecb.v[1];
 			ret.v[1] = veca.v[2] * vecb.v[0] - veca.v[0] * vecb.v[2];
 			ret.v[2] = veca.v[0] * vecb.v[1] - veca.v[1] * vecb.v[0];
-			ret.v[3] = 0;
 			return ret;
 		}
 
@@ -181,11 +190,11 @@ namespace fm {
 			return vec.v[0] + vec.v[1] + vec.v[2] + vec.v[3];
 		}
 
-		void FM_FORCE_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4* vecs,
-			fmAlignFLoat4* ret) {
+		void FM_FORCE_INLINE FM_CALL fmMat4Transpose(const FMFLOAT (*vecs)[4],
+			FMFLOAT (*ret)[4]) {
 			for (char i = 0; i < 4; i++) {
 				for (char j = 0; j < 4; j++) {
-					ret[i]._v[j] = vecs[j]._v[i];
+					ret[i][j] = vecs[j][i];
 				}
 			}
 		}

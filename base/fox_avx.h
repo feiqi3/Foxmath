@@ -8,12 +8,29 @@
 namespace fm {
 
 namespace simd {
-_fm_vec4 FM_FORCE_INLINE FM_CALL fmLoadVecP(const FMFLOAT *pd) {
+
+template<typename element, size_t element_num, typename = std::enable_if<std::is_floating_point_v<element>>>
+	_fm_vec4 FM_FORCE_INLINE FM_CALL fmLoadVecP(const element(&pd)[element_num]) {
   // AVX Intinsics for pd need 32 mem align
 #if defined(FM_DEBUG)
   MEM_ALIGN_CHECK(pd, FM_ALIGN_REQ);
 #endif
-  return _mm256_load_pd(pd);
+  if constexpr (element_num == 4) {
+	  return _mm256_load_pd(pd);
+  }
+  else {
+	  FMFLOAT temp[4];
+	  memcpy(temp, pd, element_num * sizeof(FMFLOAT));
+
+	  if constexpr (element_num < 4) {
+		  temp[3] = 0;
+	  }
+
+	  if constexpr (element_num < 3) {
+		  temp[2] = 0;
+	  }
+	  return _mm256_loadu_pd(temp);
+  }
 }
 
 _fm_vec4 FM_FORCE_INLINE FM_CALL fmLoadVec(FMFLOAT a, FMFLOAT b, FMFLOAT c,
@@ -24,8 +41,11 @@ _fm_vec4 FM_FORCE_INLINE FM_CALL fmLoadVec(FMFLOAT a, FMFLOAT b, FMFLOAT c,
   return _mm256_set_pd(d, c, b, a);
 }
 
-void FM_FORCE_INLINE FM_CALL fmStoreVec(fmAlignFLoat4 &f4, const _fm_vec4 &vec) {
-  _mm256_store_pd(f4._v, vec);
+template<typename element, size_t element_num, typename = std::enable_if<std::is_floating_point_v<element>>>
+void FM_FORCE_INLINE FM_CALL fmStoreVec(element(&pd)[element_num], const _fm_vec4& vec) {
+	FMFLOAT temp[4];
+	_mm256_storeu_pd(temp, vec);
+	memcpy((void*)pd, (void*)temp, element_num * sizeof(FMFLOAT));
 }
 
 FMFLOAT FM_FORCE_INLINE FM_CALL fmGetElem(const _fm_vec4 &vec, int pos) {
@@ -36,7 +56,7 @@ FMFLOAT FM_FORCE_INLINE FM_CALL fmGetElem(const _fm_vec4 &vec, int pos) {
   /*return ((double*)(&vec))[pos];*/
 
   // Use intrinsic to get element
-  fmAlignFLoat4 temp;
+  FMFLOAT temp[4];
   fmStoreVec(temp, vec);
   return temp[pos];
 }
@@ -180,13 +200,13 @@ FMFLOAT FM_FORCE_INLINE FM_CALL fmVecSum(const _fm_vec4 &vec) {
   return fmGetElem(temp, 0);
 }
 
-void FM_FORCE_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4 *vecs,
-                                       fmAlignFLoat4 *ret) {
+void FM_FORCE_INLINE FM_CALL fmMat4Transpose(const FMFLOAT(*vecs)[4],
+	 FMFLOAT(*ret)[4]) {
   _fm_vec4 v0, v1, v2, v3;
-  v0 = fmLoadVecP(vecs[0]._v);
-  v1 = fmLoadVecP(vecs[1]._v);
-  v2 = fmLoadVecP(vecs[2]._v);
-  v3 = fmLoadVecP(vecs[3]._v);
+  v0 = fmLoadVecP(vecs[0]);
+  v1 = fmLoadVecP(vecs[1]);
+  v2 = fmLoadVecP(vecs[2]);
+  v3 = fmLoadVecP(vecs[3]);
 
   __m256d t1 = _mm256_permute4x64_pd(v0, 0b01001110);      // a2,a3,a0,a1
   __m256d t2 = _mm256_permute4x64_pd(v1, 0b01001110);      // b2,b3,b0,b1
@@ -196,10 +216,10 @@ void FM_FORCE_INLINE FM_CALL fmMat4Transpose(const fmAlignFLoat4 *vecs,
   __m256d t6 = _mm256_blend_pd(v1, t4, 0b1100);            // b0,b1,d0,d1
   __m256d t7 = _mm256_blend_pd(t1, v2, 0b1100);            // a2,a3,c2,c3
   __m256d t8 = _mm256_blend_pd(t2, v3, 0b1100);            // b2,b3,d2,d3
-  _mm256_storeu_pd(ret[0]._v, _mm256_unpacklo_pd(t5, t6)); // a0,b0,c0,d0
-  _mm256_storeu_pd(ret[1]._v, _mm256_unpackhi_pd(t5, t6)); // a1,b1,c1,d1
-  _mm256_storeu_pd(ret[2]._v, _mm256_unpacklo_pd(t7, t8)); // a2,b2,c2,d2
-  _mm256_storeu_pd(ret[3]._v, _mm256_unpackhi_pd(t7, t8)); // a3,b3,c3,d3
+  _mm256_storeu_pd(ret[0], _mm256_unpacklo_pd(t5, t6)); // a0,b0,c0,d0
+  _mm256_storeu_pd(ret[1], _mm256_unpackhi_pd(t5, t6)); // a1,b1,c1,d1
+  _mm256_storeu_pd(ret[2], _mm256_unpacklo_pd(t7, t8)); // a2,b2,c2,d2
+  _mm256_storeu_pd(ret[3], _mm256_unpackhi_pd(t7, t8)); // a3,b3,c3,d3
 }
 
 void FM_FORCE_INLINE FM_CALL fmMat4TransposeVec(const _fm_vec4 *vecs,

@@ -57,4 +57,5 @@ void TransposeTest() {
   fm::mat4 a({1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16});
   std::cout << a << "\nTranspose\n=\n" << a.transpose() << "\n---" << std::endl;
   assert(a.transpose()[0][3] == 13 && a.transpose()[3][0] == 4);
+  assert(a.transpose()[1][1] == a[1][1]);
 }

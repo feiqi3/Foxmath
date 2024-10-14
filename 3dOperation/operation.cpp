@@ -19,41 +19,41 @@ namespace fm {
 
 	vector3 FM_CALL clamp(const vector3& a, const vector3& max,
 		const vector3& min) FMTHROW {
-		auto veca = simd::fmLoadVecP(a.__data._v);
-		auto vecMin = simd::fmLoadVecP(min.__data._v);
-		auto vecMax = simd::fmLoadVecP(max.__data._v);
+		auto veca = simd::fmLoadVecP(a.__data);
+		auto vecMin = simd::fmLoadVecP(min.__data);
+		auto vecMax = simd::fmLoadVecP(max.__data);
 		veca = simd::fmVecMaxOfEachElem(veca, vecMin);
 		veca = simd::fmVecMinOfEachElem(veca, vecMax);
-		simd::fmAlignFLoat4 ret;
-		simd::fmStoreVec(ret, veca);
+		vector3 ret;
+		simd::fmStoreVec(ret.__data, veca);
 		return ret;
 	}
 
 	vector4 FM_CALL clamp(const vector4& a, const vector4& max,
 		const vector4& min) FMTHROW {
-		auto veca = simd::fmLoadVecP(a.__data._v);
-		auto vecMin = simd::fmLoadVecP(min.__data._v);
-		auto vecMax = simd::fmLoadVecP(max.__data._v);
+		auto veca = simd::fmLoadVecP(a.__data);
+		auto vecMin = simd::fmLoadVecP(min.__data);
+		auto vecMax = simd::fmLoadVecP(max.__data);
 		veca = simd::fmVecMaxOfEachElem(veca, vecMin);
 		veca = simd::fmVecMinOfEachElem(veca, vecMax);
-		simd::fmAlignFLoat4 ret;
-		simd::fmStoreVec(ret, veca);
+		vector4 ret;
+		simd::fmStoreVec(ret.__data, veca);
 		return ret;
 	}
 
 	vector3 FM_CALL abs(const vector3& vec) FMTHROW {
-		auto t = simd::fmLoadVecP(vec.__data._v);
+		auto t = simd::fmLoadVecP(vec.__data);
 		t = simd::fmVecAbs(t);
-		simd::fmAlignFLoat4 ret;
-		simd::fmStoreVec(ret, t);
+		vector3 ret;
+		simd::fmStoreVec(ret.__data, t);
 		return ret;
 	}
 
 	vector4 FM_CALL abs(const vector4& vec) FMTHROW {
-		auto t = simd::fmLoadVecP(vec.__data._v);
+		auto t = simd::fmLoadVecP(vec.__data);
 		t = simd::fmVecAbs(t);
-		simd::fmAlignFLoat4 ret;
-		simd::fmStoreVec(ret, t);
+		vector4 ret;
+		simd::fmStoreVec(ret.__data, t);
 		return ret;
 	}
 

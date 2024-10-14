@@ -62,7 +62,7 @@ namespace fm {
 	protected:
 		vector3(const simd::fmAlignFLoat4& in);
 	private:
-		fm::simd::fmAlignFLoat4 __data;
+		FMFLOAT __data[3];
 	};
 
 	const vector3  FM_CALL operator*(const vector3& a, FMFLOAT b) FMTHROW;

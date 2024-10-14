@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 project(FoxMath CXX)
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 if(NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU|MSVC")
     message(FATAL_ERROR "You are using a compiler not supported by FoxMath, you are using ${CMAKE_CXX_COMPILER_ID}")
 endif(NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU|MSVC")

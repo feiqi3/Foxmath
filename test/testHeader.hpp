@@ -16,12 +16,12 @@
 #include <stdint.h>
 #include <vector>
 
-inline void Timebenchmark(std::function<double(double)> funca,
-	const std::string& funcaname, std::vector<double>& premute) {
+inline void Timebenchmark(std::function<FMFLOAT(FMFLOAT)> funca,
+	const std::string& funcaname, std::vector<FMFLOAT>& premute) {
 	std::cout.precision(17);
 	std::cout << std::fixed;
 	auto beg = std::chrono::steady_clock::now();
-	volatile double tmp;
+	volatile FMFLOAT tmp;
 	for (auto t : premute) {
 		tmp = funca(t);
 	}
@@ -34,10 +34,10 @@ inline void Timebenchmark(std::function<double(double)> funca,
 		<< "s\n\n";
 }
 
-inline void precisionTest(std::function<double(double)> funca,
-	std::function<double(double)> funcB,
-	const std::string& funcbname, double min, double max,
-	double step) {
+inline void precisionTest(std::function<FMFLOAT(FMFLOAT)> funca,
+	std::function<FMFLOAT(FMFLOAT)> funcB,
+	const std::string& funcbname, FMFLOAT min, FMFLOAT max,
+	FMFLOAT step) {
 	std::cout.precision(17);
 	long double totalCount = (max - min) / step;
 	long double meanError = 0;
@@ -59,7 +59,7 @@ inline void precisionTest(std::function<double(double)> funca,
 		<< "\nMax Error bounding: " << maxError << std::fixed << " at " << pos << "\n\n";
 }
 
-inline std::vector<FMFLOAT> preMute(uint32_t num, double min, double max) {
+inline std::vector<FMFLOAT> preMute(uint32_t num, FMFLOAT min, FMFLOAT max) {
 
 	std::vector<FMFLOAT> ret;
 	std::random_device seed;      // 硬件生成随机数种子

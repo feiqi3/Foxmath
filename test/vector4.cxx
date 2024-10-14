@@ -41,7 +41,6 @@ int main() {
 	scaleTest();
 	divTest();
 	hasNanTest();
-	memAlignTest();
 }
 
 bool equ(FMFLOAT a, FMFLOAT b) {
@@ -130,17 +129,4 @@ void hasNanTest() {
 	fm::vector4 vecb = veca.sqrt();
 	assert(fm::hasNan(vecb));
 	std::cout << "sqrt " << veca << " = " << vecb << std::endl;
-}
-
-void memAlignTest() {
-	size_t totalAlloctMem = 0;
-	for (int i = 0; i < 1000; ++i) {
-		totalAlloctMem += 8 * sizeof(FMFLOAT);
-		fm::simd::fmAlignFLoat4 tmp{ 1,2,3,4 };
-		auto a = new(fm::vector4)(tmp._v);
-		auto b = new(fm::vector4)(tmp._v);
-		a->dot(*b);
-		MEM_ALIGN_CHECK(a, FM_ALIGN_REQ);
-	}
-	std::cout << "Memory align test has allocte " << totalAlloctMem << "B, test passed.\n";
 }

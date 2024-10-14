@@ -42,7 +42,6 @@ int main() {
 	scaleTest();
 	divTest();
 	hasNanTest();
-    memAlignTest();
 	normalizeTest();
 }
 
@@ -133,18 +132,6 @@ void hasNanTest() {
 	assert(fm::hasNan(vecb));
 	std::cout << "sqrt " << veca << " = " << vecb << std::endl;
 
-}
-
-void memAlignTest(){
-	for (int i = 0; i < 1000; ++i) {
-		auto t = new(fm::vector3)(2,3,5); 
-		MEM_ALIGN_CHECK(t, FM_ALIGN_REQ);
-		auto vecVec4 =  std::vector<fm::vector4>(30);
-		for(auto &i : vecVec4){
-			i= i + fm::vector4(4);
-		}
-		MEM_ALIGN_CHECK(&vecVec4[0], FM_ALIGN_REQ);
-	}
 }
 
 void normalizeTest(){

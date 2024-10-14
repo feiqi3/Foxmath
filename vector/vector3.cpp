@@ -7,34 +7,32 @@
 #include <limits>
 
 namespace fm {
-fm::vector3::vector3() FMTHROW : __data({0, 0, 0, 0}) {}
+fm::vector3::vector3() FMTHROW : __data{0, 0, 0} {}
 
 fm::vector3::vector3(FMFLOAT a, FMFLOAT b, FMFLOAT c) FMTHROW
-    : __data{a, b, c, 0} {}
+    : __data{a, b, c} {}
 
 fm::vector3::vector3(const FMFLOAT *in) {
-  memcpy(__data._v, in, 3 * sizeof(FMFLOAT));
-  __data._v[3] = 0;
+  memcpy(__data, in, 3 * sizeof(FMFLOAT));
 }
 
 vector3::vector3(const simd::fmAlignFLoat4 &in) {
-  memcpy(this->__data._v, in._v, 4 * sizeof(FMFLOAT));
-  __data._v[3] = 0;
+  memcpy(this->__data, in._v, 3 * sizeof(FMFLOAT));
 }
 
 fm::vector3::vector3(const fm::vector3 &in) FMTHROW {
-  memcpy(this->__data._v, in.__data._v, 4 * sizeof(FMFLOAT));
+  memcpy(this->__data, in.__data, 3 * sizeof(FMFLOAT));
 }
 
 FMFLOAT &FM_CALL vector3::operator[](size_t t) FMTHROW {
 #ifdef FM_DEBUG
   assert(t <= 2 && t >= 0);
 #endif // FM_DEBUG
-  return __data._v[t];
+  return __data[t];
 }
 
 std::ostream &operator<<(std::ostream &out, const vector3 &s) {
-  out << "(" << s.__data._v[0] << "," << s.__data._v[1] << "," << s.__data._v[2]
+  out << "(" << s.__data[0] << "," << s.__data[1] << "," << s.__data[2]
       << ")";
   return out;
 }
@@ -43,118 +41,118 @@ const FMFLOAT &FM_CALL vector3::operator[](size_t t) const FMTHROW {
 #ifdef FM_DEBUG
   assert(t <= 2 && t >= 0);
 #endif // FM_DEBUG
-  return __data._v[t];
+  return __data[t];
 }
 
 const vector3 FM_CALL vector3::operator+(const vector3 &b) const FMTHROW {
-  simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
-  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
+  simd::_fm_vec4 veca = simd::fmLoadVecP(__data);
+  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data);
   simd::_fm_vec4 ret = simd::fmVecAdd(veca, vecb);
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
 const vector3 FM_CALL vector3::operator-(const vector3 &b) const FMTHROW {
-  simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
-  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
+  simd::_fm_vec4 veca = simd::fmLoadVecP(__data);
+  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data);
 
   simd::_fm_vec4 ret = simd::fmVecSub(veca, vecb);
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
 const vector3 FM_CALL vector3::operator-() const FMTHROW {
-  auto ret = fm::simd::fmLoadVecP(__data._v);
+  auto ret = fm::simd::fmLoadVecP(__data);
   ret = simd::fmVecUnaryMinus(ret);
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
 const vector3 FM_CALL vector3::operator*(const vector3 &b) const FMTHROW {
-  simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
-  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
+  simd::_fm_vec4 veca = simd::fmLoadVecP(__data);
+  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data);
   simd::_fm_vec4 ret = simd::fmVecMul(veca, vecb);
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
 const vector3 FM_CALL vector3::operator/(const vector3 &b) const FMTHROW {
-  simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
-  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
+  simd::_fm_vec4 veca = simd::fmLoadVecP(__data);
+  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data);
   simd::_fm_vec4 ret = simd::fmVecDiv(veca, vecb);
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
 const FMFLOAT FM_CALL vector3::dot(const vector3 &b) const FMTHROW {
 #ifdef FM_DEBUG
-  assert(__data._v[3] == 0 && b.__data._v[3] == 0);
+  assert(__data[3] == 0 && b.__data[3] == 0);
 #endif // FM_DEBUG
 
-  simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
-  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
+  simd::_fm_vec4 veca = simd::fmLoadVecP(__data);
+  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data);
   return simd::fmVecDot(veca, vecb);
 }
 
 const vector3 FM_CALL vector3::cross(const vector3 &b) const FMTHROW {
-  simd::_fm_vec4 veca = simd::fmLoadVecP(__data._v);
-  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data._v);
+  simd::_fm_vec4 veca = simd::fmLoadVecP(__data);
+  simd::_fm_vec4 vecb = simd::fmLoadVecP(b.__data);
   simd::_fm_vec4 ret = simd::fmVec3Cross(veca, vecb);
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
 FMFLOAT FM_CALL vector3::maxElement() const FMTHROW {
-  simd::_fm_vec4 vec = simd::fmLoadVec(__data._v[0], __data._v[1], __data._v[2],
+  simd::_fm_vec4 vec = simd::fmLoadVec(__data[0], __data[1], __data[2],
                                        std::numeric_limits<FMFLOAT>::min());
   return simd::fmMaxElemOfVec(vec);
 }
 
 FMFLOAT FM_CALL vector3::minElement() const FMTHROW {
-  simd::_fm_vec4 vec = simd::fmLoadVec(__data._v[0], __data._v[1], __data._v[2],
+  simd::_fm_vec4 vec = simd::fmLoadVec(__data[0], __data[1], __data[2],
                                        std::numeric_limits<FMFLOAT>::max());
   return simd::fmMinElemOfVec(vec);
 }
 
 FMFLOAT FM_CALL vector3::length() const FMTHROW {
 #ifdef FM_DEBUG
-  assert(__data._v[3] == 0);
+  assert(__data[3] == 0);
 #endif // FM_DEBUG
-  simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data._v);
+  simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data);
   FMFLOAT ff = simd::fmVecDot(vec, vec);
   return std::sqrt(ff);
 }
 
 vector3 FM_CALL vector3::square() const FMTHROW {
-  simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data._v);
+  simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data);
   auto ret = (simd::fmVecMul(vec, vec));
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
 vector3 FM_CALL vector3::sqrt() const FMTHROW {
 #ifdef FM_DEBUG
-  assert(__data._v[3] == 0);
+  assert(__data[3] == 0);
 #endif // FM_DEBUG
-  simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data._v);
+  simd::_fm_vec4 vec = simd::fmLoadVecP(this->__data);
   auto ret = simd::fmVecSqrt(vec);
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
 const vector3 FM_CALL operator*(const vector3 &a, FMFLOAT b) FMTHROW {
-  simd::_fm_vec4 veca = simd::fmLoadVecP(a.__data._v);
+  simd::_fm_vec4 veca = simd::fmLoadVecP(a.__data);
   simd::_fm_vec4 ret = simd::fmVecScale(veca, b);
   vector3 retVec;
-  fmStoreVec(retVec.__data, ret);
+  simd::fmStoreVec(retVec.__data, ret);
   return retVec;
 }
 
@@ -192,7 +190,7 @@ FMFLOAT &FM_CALL vector3::z() FMTHROW { return __data[2]; }
 
 void FM_CALL fm::vector3::normalize() FMTHROW {
 	auto t = this->length();
-	auto x = simd::fmLoadVecP(this->__data._v);
+	auto x = simd::fmLoadVecP(this->__data);
 	x = simd::fmVecScale(x, 1./t);
 	simd::fmStoreVec(__data, x);
 }

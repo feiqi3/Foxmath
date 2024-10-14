@@ -32,10 +32,10 @@ vector4 &FM_CALL mat4::operator[](size_t t) noexcept { return __data[t]; }
 // and 8 xmm register under SSE-supported cpu
 // So I guess it's okay
 const mat4 FM_CALL mat4::operator*(const mat4 &b) const noexcept {
-  simd::_fm_vec4 a0 = simd::fmLoadVecP(__data[0].__data._v);
-  simd::_fm_vec4 a1 = simd::fmLoadVecP(__data[1].__data._v);
-  simd::_fm_vec4 a2 = simd::fmLoadVecP(__data[2].__data._v);
-  simd::_fm_vec4 a3 = simd::fmLoadVecP(__data[3].__data._v);
+  simd::_fm_vec4 a0 = simd::fmLoadVecP(__data[0].__data);
+  simd::_fm_vec4 a1 = simd::fmLoadVecP(__data[1].__data);
+  simd::_fm_vec4 a2 = simd::fmLoadVecP(__data[2].__data);
+  simd::_fm_vec4 a3 = simd::fmLoadVecP(__data[3].__data);
   simd::_fm_vec4 b0 = simd::fmLoadVec(b[0][0], b[1][0], b[2][0], b[3][0]);
   simd::_fm_vec4 b1 = simd::fmLoadVec(b[0][1], b[1][1], b[2][1], b[3][1]);
   simd::_fm_vec4 b2 = simd::fmLoadVec(b[0][2], b[1][2], b[2][2], b[3][2]);
@@ -81,8 +81,8 @@ const mat4 FM_CALL mat4::operator-(const mat4 &b) const noexcept {
 mat4 FM_CALL mat4::transpose() const noexcept {
   mat4 ret;
   // Magic
-  simd::fmMat4Transpose((simd::fmAlignFLoat4 *)this->__data,
-                        (simd::fmAlignFLoat4 *)ret.__data);
+  simd::fmMat4Transpose(reinterpret_cast<decltype( &(__data[0].__data))>( this->__data),
+      reinterpret_cast<decltype(&(ret.__data[0].__data))>(ret.__data));
   return ret;
 }
 
@@ -99,7 +99,7 @@ std::ostream &operator<<(std::ostream &out, const mat4 &s) {
 }
 const fm::vector4 FM_CALL operator*(const fm::vector4 &veca,
                                     const fm::mat4 &b) noexcept {
-  simd::_fm_vec4 a = simd::fmLoadVecP(veca.__data._v);
+  simd::_fm_vec4 a = simd::fmLoadVecP(veca.__data);
   simd::_fm_vec4 b0 = simd::fmLoadVec(b[0][0], b[1][0], b[2][0], b[3][0]);
   simd::_fm_vec4 b1 = simd::fmLoadVec(b[0][1], b[1][1], b[2][1], b[3][1]);
   simd::_fm_vec4 b2 = simd::fmLoadVec(b[0][2], b[1][2], b[2][2], b[3][2]);
@@ -109,11 +109,11 @@ const fm::vector4 FM_CALL operator*(const fm::vector4 &veca,
 }
 const fm::vector4 FM_CALL operator*(const fm::mat4 &mata,
                                     const fm::vector4 &vecb) noexcept {
-  simd::_fm_vec4 a = simd::fmLoadVecP(vecb.__data._v);
-  simd::_fm_vec4 b0 = simd::fmLoadVecP(mata.__data[0].__data._v);
-  simd::_fm_vec4 b1 = simd::fmLoadVecP(mata.__data[1].__data._v);
-  simd::_fm_vec4 b2 = simd::fmLoadVecP(mata.__data[2].__data._v);
-  simd::_fm_vec4 b3 = simd::fmLoadVecP(mata.__data[3].__data._v);
+  simd::_fm_vec4 a = simd::fmLoadVecP(vecb.__data);
+  simd::_fm_vec4 b0 = simd::fmLoadVecP(mata.__data[0].__data);
+  simd::_fm_vec4 b1 = simd::fmLoadVecP(mata.__data[1].__data);
+  simd::_fm_vec4 b2 = simd::fmLoadVecP(mata.__data[2].__data);
+  simd::_fm_vec4 b3 = simd::fmLoadVecP(mata.__data[3].__data);
   return vector4(simd::fmVecDot(a, b0), simd::fmVecDot(a, b1),
                  simd::fmVecDot(a, b2), simd::fmVecDot(a, b3));
 }

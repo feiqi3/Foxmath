@@ -11,6 +11,8 @@ endif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang|GNU")
 
 file(GLOB SRC_LIST_FOR_TEST "../base/*.cpp" "../src/*.hpp" "../src/*.h")
 file(GLOB TEST_LIST "*.cpp" "*.cxx")
+set(CMAKE_FOLDER tests)
+
 foreach(TEST_FILE IN LISTS TEST_LIST)
     get_filename_component(fileName ${TEST_FILE} NAME_WE)
     add_executable(${fileName} "${TEST_FILE}")
@@ -18,4 +20,6 @@ foreach(TEST_FILE IN LISTS TEST_LIST)
     target_include_directories(${fileName} PUBLIC ../Include/)
     add_test("${fileName}_Test" ${fileName})
     message("Add test: ${fileName}_Test")
-endforeach(TEST_FILE in LISTS TEST_LIST)
+ endforeach(TEST_FILE in LISTS TEST_LIST)
+
+ unset(CMAKE_FOLDER)

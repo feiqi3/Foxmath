@@ -89,10 +89,7 @@ namespace fm {
 		friend vector4 FM_CALL abs(const vector4& vec) FMTHROW;
 
 	protected:
-		vector4(const simd::fmAlignFLoat4& in);
-
-	protected:
-		simd::fmAlignFLoat4 __data;
+		FMFLOAT __data[4];
 	};
 
 	const vector4 FM_CALL operator*(const vector4& a, FMFLOAT b) FMTHROW;

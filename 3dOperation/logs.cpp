@@ -235,7 +235,7 @@ double FM_CALL __do_Ln(double in) FMTHROW {
   static const simd::fmAlignFLoat4 tylorCoef[4]{-0.5, 1. / 3, -0.25, 0.2};
   double rem;
   auto exp = mfrexp(in, &rem);
-  int s = rem * 100;
+  int s = static_cast<int>(rem * 100.);
   double u = s * .01;
   double k = rem / u - 1; // Now ln(1+x) = exp*ln2 + ln(rem) ==> rem = s * k ==>
                           // ln(rem) = ln(s) + ln(k)
